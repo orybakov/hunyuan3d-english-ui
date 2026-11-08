@@ -261,6 +261,11 @@
     missing: () => [...missing],
     stats: () => ({
       bundlePatched: !!window.__HYRU_BUNDLE_PATCHED,
+      hook: window.__HYRU_HOOK || null,
+      topFrame: window === window.top,
+      url: location.pathname,
+      siteScriptsBeforeHook: [...document.scripts].filter((s) => /index__/.test(s.src)).map((s) => s.src.split("/").pop()),
+      lang: document.documentElement.lang,
       dict: exact.size,
       patterns: patterns.length,
       mtState,

@@ -6,6 +6,7 @@
   const origParse = JSON.parse;
   let zh = null;
   let en = null;
+  const diag = (window.__HYRU_HOOK = { installedAt: performance.now(), seen: [] });
 
   const isBundle = (o) =>
     o && typeof o === "object" && !Array.isArray(o) &&
@@ -24,6 +25,7 @@
     if (isBundle(r)) {
       if (CJK.test(JSON.stringify(r.navigation))) zh = r;
       else en = r;
+      diag.seen.push(r === zh ? "zh" : "en");
       if (zh && en) {
         deepAssign(zh, en);
         window.__HYRU_BUNDLE_PATCHED = true;
