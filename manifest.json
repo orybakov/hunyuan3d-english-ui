@@ -1,0 +1,15 @@
+{
+  "manifest_version": 3,
+  "name": "Hunyuan 3D — English UI",
+  "version": "0.1.0",
+  "description": "Переключает интерфейс 3d.hunyuan.tencent.com на английский (встроенный перевод сайта + словарь + офлайн-переводчик Chrome).",
+  "content_scripts": [
+    {
+      "matches": ["https://3d.hunyuan.tencent.com/*"],
+      "js": ["src/i18n-hook.js", "src/dict.js", "src/dom-translate.js"],
+      "run_at": "document_start",
+      "world": "MAIN",
+      "all_frames": true
+    }
+  ]
+}
