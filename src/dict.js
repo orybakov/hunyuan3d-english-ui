@@ -1382,7 +1382,27 @@ window.__HYRU_DICT = {
 "反馈失败：": "Feedback failed:",
 "访问异常，请稍后重试": "Access error, please try again later",
 "其他请求错误:": "Request error:",
-"空气/水感": "Air/water feel"
+"空气/水感": "Air/water feel",
+"今日剩余生成次数：": "Generations left today:",
+"几何生成": "Geometry generation",
+"UV展开": "UV unwrapping",
+"输入文本生成图片。建议以单主体为主。例如：一个战士英雄，手持战锤，蒸汽朋克风格": "Enter text to generate an image. A single subject works best. Example: a warrior hero holding a war hammer, steampunk style",
+"图层": "Layers",
+"属性": "Properties",
+"预分割": "Pre-segmentation",
+"批量操作": "Batch actions",
+"快速生成丰富细节的高质量几何模型": "Quickly generate high-quality, detailed geometry",
+"通过文本生成3D设计图": "Generate 3D concept art from text",
+"请输入提示词": "Enter a prompt",
+"自动化生成高质量UV切线模型": "Automatically generate high-quality UV seams",
+"一键生成布线规整、符合专业美术标准的低模，面数随物体复杂度灵活可调，同时兼容高模或图像输入，输出形式覆盖三角面与四边面": "One-click low-poly models with clean topology that meet professional art standards. Face count adapts to object complexity. Accepts a high-poly model or an image as input; outputs triangles or quads",
+"低模拓扑：输入高模（AI高模、扫描资产等）进行智能拓扑，获得专业管线可用的低模": "Low-poly retopology: upload a high-poly model (AI-generated, scanned, etc.) and get a production-ready low-poly model",
+"图生低模": "Image-to-Low-poly",
+"支持.FBX, .GLB, .OBJ格式": "Supports .FBX, .GLB, .OBJ",
+"低模拓扑 - V3.0": "Low-poly retopology - V3.0",
+"自适应面数": "Adaptive face count",
+"v3.0版本-新一代低模模型，布线质量与细节保持进一步提升，支持精确面数控制": "v3.0 - next-gen low-poly model: better topology and detail preservation, precise face count control",
+"v2.5版本-提升布线质量，细节保持能力更强，稳定性提升，支持精确面数控制": "v2.5 - improved topology, better detail preservation and stability, precise face count control"
 },
 "patterns": [
 [
