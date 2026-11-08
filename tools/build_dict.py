@@ -6,6 +6,7 @@
 """
 import json
 import re
+import subprocess
 import sys
 import urllib.request
 from pathlib import Path
@@ -52,17 +53,23 @@ def main():
     bundles = extract_bundles(get(m.group(1)))
     zh = next(b for b in bundles if CJK.search(json.dumps(b["navigation"], ensure_ascii=False)))
     en = next(b for b in bundles if b is not zh)
-    fz, fe = flat(zh), flat(en)
+    pairs = [(flat(zh), flat(en))]
+
+    # приложение /studio — отдельная сборка, наборы — объектные литералы
+    studio = json.loads(subprocess.run(["node", str(ROOT / "tools/extract_studio.mjs")],
+                                       capture_output=True, text=True, check=True).stdout)
+    pairs.append((flat(studio["zh"]), flat(studio["en"])))
 
     exact, patterns = {}, []
-    for key, zv in fz.items():
-        ev = fe.get(key)
-        if not isinstance(zv, str) or not isinstance(ev, str) or not CJK.search(zv):
-            continue
-        if "{{" in zv:
-            patterns.append([zv, ev])
-        else:
-            exact.setdefault(zv.strip(), ev.strip())
+    for fz, fe in pairs:
+        for key, zv in fz.items():
+            ev = fe.get(key)
+            if not isinstance(zv, str) or not isinstance(ev, str) or not CJK.search(zv):
+                continue
+            if "{{" in zv:
+                patterns.append([zv, ev])
+            else:
+                exact.setdefault(zv.strip(), ev.strip())
 
     # extra — авто-выжимка из захардкоженных строк, manual — ручные правки (имеют приоритет)
     manual = json.loads((ROOT / "tools/extra_zh_en.json").read_text("utf-8"))

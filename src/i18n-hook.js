@@ -1,12 +1,14 @@
-// Подменяет китайский набор строк i18next на встроенный английский.
-// Сайт держит оба набора как JSON.parse('...') в index.js и выбирает язык по домену,
-// поэтому ловим разбор обоих и переливаем английские значения в китайский объект.
+// Включает встроенный английский перевод сайта. На сайте два разных приложения:
+//  - основное (/, /creation, ...): строки лежат в index.js как JSON.parse('...'), язык по домену;
+//  - studio (/studio/...): строки — объектные литералы, в i18next.init передаётся lng:"zh" жёстко.
 (() => {
   const CJK = /[\u4e00-\u9fff]/;
+  const diag = (window.__HYRU_HOOK = { installedAt: performance.now(), seen: [], forcedLng: null });
+
+  // --- 1. Основное приложение: переливаем английские значения в китайский набор ---
   const origParse = JSON.parse;
   let zh = null;
   let en = null;
-  const diag = (window.__HYRU_HOOK = { installedAt: performance.now(), seen: [] });
 
   const isBundle = (o) =>
     o && typeof o === "object" && !Array.isArray(o) &&
@@ -35,4 +37,38 @@
   };
   patched.toString = () => origParse.toString();
   JSON.parse = patched;
+
+  // --- 2. Любой i18next без своего defaultNS (studio): подменяем lng в опциях init ---
+  // i18next.init читает options.defaultNS; если его нет в объекте, чтение уходит в прототип.
+  // Временный геттер на Object.prototype ловит этот момент, меняет lng и сразу удаляется.
+  const KEY = "defaultNS";
+  if (!Object.prototype.hasOwnProperty(KEY)) {
+    const restore = () => {
+      delete Object.prototype[KEY];
+    };
+    Object.defineProperty(Object.prototype, KEY, {
+      configurable: true,
+      enumerable: false,
+      get() {
+        try {
+          const res = this && this !== Object.prototype && this.resources;
+          if (res && typeof res === "object" && ("lng" in this || "fallbackLng" in this)) {
+            const enKey = Object.keys(res).find((k) => /^en\b/i.test(k));
+            if (enKey) {
+              this.lng = enKey;
+              diag.forcedLng = enKey;
+              window.__HYRU_BUNDLE_PATCHED = true;
+              restore();
+            }
+          }
+        } catch {}
+        return undefined;
+      },
+      set(v) {
+        Object.defineProperty(this, KEY, { value: v, writable: true, enumerable: true, configurable: true });
+      },
+    });
+    // страховка: не держим геттер дольше, чем нужно для старта приложения
+    setTimeout(restore, 60000);
+  }
 })();
