@@ -53,12 +53,24 @@ def main():
     bundles = extract_bundles(get(m.group(1)))
     zh = next(b for b in bundles if CJK.search(json.dumps(b["navigation"], ensure_ascii=False)))
     en = next(b for b in bundles if b is not zh)
-    pairs = [(flat(zh), flat(en))]
+    ov_path = ROOT / "tools/overrides_en.json"
+    ov = json.loads(ov_path.read_text("utf-8")) if ov_path.exists() else {}
+    (ROOT / "src/overrides.js").write_text(
+        "// Сгенерировано tools/build_dict.py из tools/overrides_en.json\n"
+        "window.__HYRU_OVERRIDES = " + json.dumps(ov, ensure_ascii=False, indent=0) + ";\n", "utf-8")
+
+    hints = json.loads((ROOT / "tools/hints_ru.json").read_text("utf-8"))
+    hints = {k: {kk: vv for kk, vv in v.items() if vv} for k, v in hints.items()}
+    (ROOT / "src/hints-data.js").write_text(
+        "// Сгенерировано tools/build_dict.py из tools/hints_ru.json\n"
+        "window.__HYRU_HINTS = " + json.dumps(hints, ensure_ascii=False, indent=0) + ";\n", "utf-8")
+
+    pairs = [(flat(zh), {**flat(en), **ov.get("main", {})})]
 
     # приложение /studio — отдельная сборка, наборы — объектные литералы
     studio = json.loads(subprocess.run(["node", str(ROOT / "tools/extract_studio.mjs")],
                                        capture_output=True, text=True, check=True).stdout)
-    pairs.append((flat(studio["zh"]), flat(studio["en"])))
+    pairs.append((flat(studio["zh"]), {**flat(studio["en"]), **ov.get("studio", {})}))
 
     exact, patterns = {}, []
     for fz, fe in pairs:

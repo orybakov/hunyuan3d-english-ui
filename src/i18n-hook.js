@@ -3,7 +3,25 @@
 //  - studio (/studio/...): строки — объектные литералы, в i18next.init передаётся lng:"zh" жёстко.
 (() => {
   const CJK = /[\u4e00-\u9fff]/;
-  const diag = (window.__HYRU_HOOK = { installedAt: performance.now(), seen: [], forcedLng: null });
+  const diag = (window.__HYRU_HOOK = { installedAt: performance.now(), seen: [], forcedLng: null, overrides: 0 });
+  const OV = window.__HYRU_OVERRIDES || {};
+
+  // Правки английских текстов (tools/overrides_en.json) по пути ключа "a.b.c"
+  const applyOverrides = (root, map) => {
+    if (!root || !map) return;
+    for (const [path, val] of Object.entries(map)) {
+      const parts = path.split(".");
+      let o = root;
+      for (let i = 0; i < parts.length - 1 && o; i++) {
+        if (typeof o[parts[i]] !== "object" || o[parts[i]] === null) o[parts[i]] = {};
+        o = o[parts[i]];
+      }
+      if (o) {
+        o[parts[parts.length - 1]] = val;
+        diag.overrides++;
+      }
+    }
+  };
 
   // --- 1. Основное приложение: переливаем английские значения в китайский набор ---
   const origParse = JSON.parse;
@@ -30,6 +48,7 @@
       diag.seen.push(r === zh ? "zh" : "en");
       if (zh && en) {
         deepAssign(zh, en);
+        applyOverrides(zh, OV.main);
         window.__HYRU_BUNDLE_PATCHED = true;
       }
     }
@@ -56,6 +75,8 @@
             const enKey = Object.keys(res).find((k) => /^en\b/i.test(k));
             if (enKey) {
               this.lng = enKey;
+              const t = res[enKey] && res[enKey].translation;
+              if (t && typeof t === "object") applyOverrides(t, OV.studio);
               diag.forcedLng = enKey;
               window.__HYRU_BUNDLE_PATCHED = true;
               restore();

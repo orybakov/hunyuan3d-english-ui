@@ -1,0 +1,96 @@
+/* Аккуратнее, но в стиле сайта: тот же тёмный дизайн, лучше шрифт и мелочи. */
+
+/* Сайт везде просит "PingFang SC" (на Linux/Windows его нет → случайный fallback).
+   Подставляем под это имя Inter только для латиницы/кириллицы; иероглифы идут дальше по списку. */
+@font-face {
+  font-family: "PingFang SC";
+  src: url("chrome-extension://__MSG_@@extension_id__/fonts/InterVariable.woff2") format("woff2");
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+0000-024F, U+0300-036F, U+0400-052F, U+2000-206F, U+20A0-20CF, U+2100-214F, U+2190-21FF, U+2212;
+}
+@font-face {
+  font-family: "HYRU Inter";
+  src: url("chrome-extension://__MSG_@@extension_id__/fonts/InterVariable.woff2") format("woff2");
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+0000-024F, U+0300-036F, U+0400-052F, U+2000-206F, U+20A0-20CF, U+2100-214F, U+2190-21FF, U+2212;
+}
+
+:root {
+  /* studio (Tailwind) и основной сайт */
+  --font-sans: "HYRU Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Noto Sans", Arial, sans-serif,
+    "PingFang SC", "Microsoft YaHei", "Noto Sans CJK SC", "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji" !important;
+}
+
+html,
+body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  font-feature-settings: "cv11", "calt";
+}
+
+/* Китайская вёрстка рвёт слова посередине (break-all) — для английского это некрасиво */
+* {
+  word-break: normal !important;
+  overflow-wrap: break-word;
+}
+textarea,
+input,
+[contenteditable="true"] {
+  overflow-wrap: anywhere;
+}
+
+/* Тонкие тёмные скроллбары */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.18) transparent;
+}
+
+/* ---------- Подсказки ---------- */
+[data-hyru-hint] {
+  text-decoration: underline dotted rgba(255, 255, 255, 0.35);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+}
+html.hyru-hints-off [data-hyru-hint] {
+  text-decoration: none;
+}
+
+#hyru-tip {
+  position: fixed;
+  z-index: 2147483647;
+  max-width: 320px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: rgba(24, 25, 30, 0.94);
+  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
+  color: rgba(255, 255, 255, 0.88);
+  font: 400 12.5px/1.5 "HYRU Inter", -apple-system, "Segoe UI", Roboto, sans-serif;
+  letter-spacing: 0.005em;
+  pointer-events: none;
+  opacity: 0;
+  transform: translateY(4px);
+  transition: opacity 0.14s ease, transform 0.14s ease;
+}
+#hyru-tip.show {
+  opacity: 1;
+  transform: none;
+}
+#hyru-tip b {
+  display: block;
+  margin-bottom: 4px;
+  color: #fff;
+  font-weight: 600;
+  font-size: 13px;
+}
+#hyru-tip .tip-hint {
+  margin-top: 6px;
+  color: #7fb4ff;
+}

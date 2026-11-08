@@ -11,7 +11,14 @@ const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 const url = process.argv[2] && !process.argv[2].startsWith("--") ? process.argv[2] : "https://3d.hunyuan.tencent.com/";
 const off = process.argv.includes("--off");
 const manifest = JSON.parse(readFileSync(join(root, "manifest.json"), "utf8"));
-const code = manifest.content_scripts[0].js.map((f) => readFileSync(join(root, f), "utf8")).join("\n;\n");
+const font = "data:font/woff2;base64," + readFileSync(join(root, "fonts/InterVariable.woff2")).toString("base64");
+const css = manifest.content_scripts.flatMap((c) => c.css || []).map((f) => readFileSync(join(root, f), "utf8")).join("\n")
+  .replaceAll("chrome-extension://__MSG_@@extension_id__/fonts/InterVariable.woff2", font);
+const cssInject = `(() => { const add = () => { const s = document.createElement("style"); s.textContent = ${JSON.stringify(css)};
+  (document.head || document.documentElement).appendChild(s); };
+  if (document.documentElement) add(); else new MutationObserver((m, o) => { if (document.documentElement) { o.disconnect(); add(); } }).observe(document, { childList: true }); })();`;
+const code = [cssInject, ...manifest.content_scripts[0].js.map((f) => readFileSync(join(root, f), "utf8"))]
+  .map((c) => `try {\n${c}\n} catch (e) { console.error("[hyru smoke]", e); }`).join("\n");
 
 const port = 9333;
 const chrome = spawn("google-chrome-stable", [
@@ -41,6 +48,15 @@ try {
     const label = click.slice(8);
     await ev(`[...document.querySelectorAll("button,a,div,span")].reverse().find(e=>e.innerText&&e.innerText.trim()===${JSON.stringify(label)})?.click()`);
     await sleep(5000);
+  }
+  if (process.argv.includes("--hinttest")) {
+    // проверка подсказок: кнопка с текстом из словаря подсказок + наведение мышью
+    await ev(`(() => { const b = document.createElement("button"); b.id = "hyru-test"; b.textContent = "Smart Topology";
+      b.style.cssText = "position:fixed;left:700px;top:120px;z-index:99999;padding:8px 14px"; document.body.appendChild(b); })()`);
+    await sleep(300);
+    console.log("marked:", await ev(`document.getElementById("hyru-test").getAttribute("data-hyru-hint")`));
+    await send("Input.dispatchMouseEvent", { type: "mouseMoved", x: 740, y: 135 });
+    await sleep(900);
   }
   const stats = await ev("window.__hyru ? JSON.stringify(window.__hyru.stats()) : 'no ext'");
   const text = await ev("document.body.innerText");
