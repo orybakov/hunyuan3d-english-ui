@@ -75,3 +75,5 @@ li .icon.confirm { color: #ff6b6b; font-size: 11px; white-space: nowrap; }
 #msg { min-height: 1em; margin: 8px 0 0; color: var(--muted); font-size: 12px; }
 #msg.err { color: #ff6b6b; }
 #empty { color: var(--muted); font-size: 12px; }
+#current details { margin-top: 4px; }
+#current pre { white-space: pre-wrap; word-break: break-all; font-size: 10px; max-height: 140px; overflow: auto; background: var(--card); padding: 6px; border-radius: 6px; user-select: text; }

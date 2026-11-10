@@ -64,6 +64,15 @@ async function render() {
     cur.append(b, known ? "" : " (not saved)");
   } else {
     cur.textContent = "Not logged in (or the site is unreachable).";
+    if (st.diag) {
+      const d = document.createElement("details");
+      const sm = document.createElement("summary");
+      sm.textContent = "Details";
+      const pre = document.createElement("pre");
+      pre.textContent = [`tab: ${st.diag.tab}`, ...(st.diag.steps || []), `cookies: ${st.diag.cookies || "none"}`].join("\n");
+      d.append(sm, pre);
+      cur.append(d);
+    }
   }
 
   const list = $("#list");

@@ -16,9 +16,14 @@ async function siteTab() {
   return tabs.find((t) => t.active) || tabs[0] || null;
 }
 
+// Last API attempt, shown in the popup when the login isn't detected.
+let lastDiag = null;
+
 // API calls run inside an open site tab when possible (same origin, exactly like the site), otherwise from here.
 async function api(path, body) {
+  const diag = (lastDiag = { path, tab: null, steps: [] });
   const tab = await siteTab();
+  diag.tab = tab ? `${tab.status} ${tab.url.slice(0, 60)}` : "no site tab";
   if (tab && tab.status === "complete") {
     try {
       const [r] = await chrome.scripting.executeScript({
@@ -32,12 +37,15 @@ async function api(path, body) {
             headers,
             body: body ? JSON.stringify(body) : undefined,
           });
-          return res.json();
+          return { status: res.status, text: await res.text() };
         },
       });
-      if (r && r.result) return r.result;
+      const out = r && r.result;
+      diag.steps.push(out ? `tab: ${out.status} ${out.text.slice(0, 160)}` : "tab: no result");
+      if (out) return JSON.parse(out.text);
     } catch (e) {
       // tab may be navigating or showing an error page — fall back
+      diag.steps.push(`tab: ${(e && e.message) || e}`);
     }
   }
   const res = await fetch(ORIGIN + path, {
@@ -46,7 +54,9 @@ async function api(path, body) {
     headers: HEADERS,
     body: body ? JSON.stringify(body) : undefined,
   });
-  return res.json();
+  const text = await res.text();
+  diag.steps.push(`bg: ${res.status} ${text.slice(0, 160)}`);
+  return JSON.parse(text);
 }
 
 async function whoAmI() {
@@ -59,7 +69,8 @@ async function whoAmI() {
       userId: id != null ? String(id) : null,
       nickname: d.nickname || d.nickName || d.userName || d.name || d.email || "",
     };
-  } catch {
+  } catch (e) {
+    if (lastDiag) lastDiag.steps.push(`error: ${(e && e.message) || e}`);
     return null;
   }
 }
@@ -157,7 +168,8 @@ const handlers = {
         await store(state);
       }
     }
-    return { ...state, accounts: state.accounts.map(({ cookies, ...a }) => a), current };
+    const diag = me ? null : { ...lastDiag, cookies: (await getCookies()).map((c) => c.name).join(", ") };
+    return { ...state, accounts: state.accounts.map(({ cookies, ...a }) => a), current, diag };
   },
 
   async save({ name }) {
