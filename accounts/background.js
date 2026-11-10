@@ -121,7 +121,15 @@ async function cookieDiag() {
   }
   const stores = await chrome.cookies.getAllCookieStores();
   parts.push(`stores=${stores.map((s) => s.id).join("/")}`);
-  return parts.join(", ") + "; names: " + (await getCookies()).map((c) => c.name).join(", ");
+  let all = [];
+  try {
+    all = await chrome.cookies.getAll({});
+  } catch {}
+  const related = all
+    .filter((c) => /tencent|hunyuan|qq\.com/.test(c.domain))
+    .map((c) => `${c.domain}${c.path}:${c.name}${c.partitionKey ? "(p)" : ""}`);
+  parts.push(`total=${all.length}`);
+  return parts.join(", ") + "; related: " + (related.join(", ") || "none");
 }
 
 async function clearCookies() {

@@ -149,7 +149,13 @@ function nameForm(value, placeholder, onOk, onCancel) {
     onOk(input.value.trim());
   };
   no.onclick = onCancel;
-  input.onkeydown = (e) => e.key === "Escape" && (e.preventDefault(), onCancel());
+  input.onkeydown = (e) => {
+    // returning false from an on-handler would block typing, so no expression body here
+    if (e.key === "Escape") {
+      e.preventDefault();
+      onCancel();
+    }
+  };
   f.append(input, ok, no);
   setTimeout(() => input.focus(), 0);
   return f;
