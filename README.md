@@ -1,39 +1,108 @@
-# Hunyuan 3D — английский интерфейс (этап 1, дальше русский)
+# Hunyuan 3D — English UI & Hints
 
-Расширение Chrome для https://3d.hunyuan.tencent.com.
+**English** · [Русский](#русский)
 
-## Как работает
-1. `src/i18n-hook.js`: на сайте уже есть полный английский набор строк (используется на 3d.hunyuanglobal.com),
-   но язык выбирается по домену, а `?lang=en` и localStorage игнорируются. Скрипт перехватывает `JSON.parse`
-   и копирует английские значения в китайский набор до запуска приложения. Покрывает около 865 строк интерфейса.
-   Раздел `/studio/...` — отдельное приложение (cdn-game-3d.qstatic.com), там в `i18next.init` жёстко
-   передаётся `lng:"zh"`. Его меняем на `en` через временный геттер `defaultNS` на `Object.prototype`:
-   i18next читает это поле первым делом в `init`, после срабатывания геттер удаляется.
-2. `src/dom-translate.js` + `src/dict.js`: переводит то, что не попадает в i18n: захардкоженные строки,
-   окно входа, TDesign, тексты с сервера. Сначала точный словарь (~1400 строк) и шаблоны,
-   затем встроенный офлайн-переводчик Chrome (Translator API) с кэшем в localStorage.
-   Поля ввода (textarea, contenteditable) не трогает.
+An unofficial Chrome extension for [Tencent Hunyuan 3D](https://3d.hunyuan.tencent.com) (`3d.hunyuan.tencent.com`).
+The Chinese site is the one that actually works from most regions, but its interface is Chinese-only.
+This extension switches it to English, cleans up the wording and adds tooltips that explain 3D terms.
 
-3. `tools/overrides_en.json` — правки английских текстов Tencent (ошибки перевода, единые термины, короче),
-   применяются по ключу прямо в наборы i18next.
-4. `src/theme.css` — тот же дизайн, аккуратнее: шрифт Inter для латиницы/кириллицы (подставлен под имя
-   "PingFang SC", которого нет на Linux/Windows), без разрыва слов посередине, тонкие скроллбары.
-5. `src/hints.js` + `tools/hints_ru.json` — подсказки на русском у ключевых терминов (пунктирное подчёркивание,
-   карточка при наведении), Alt+H — вкл/выкл. У обрезанных надписей «…» при наведении — полный текст.
+![Tooltip demo](docs/hint.png)
+<sub>Tooltip demo on the login page (test button). Inside the app, tooltips appear on real buttons and settings.</sub>
 
-## Установка
-`chrome://extensions` → «Режим разработчика» → «Загрузить распакованное расширение» → папка проекта.
-После изменений нажать ↻ у расширения и обновить вкладку.
+## Features
 
-Офлайн-переводчику Chrome при первом запуске нужно скачать языковую модель: это произойдёт после
-первого клика по странице. Без модели словарь всё равно работает.
+- **English everywhere.** The site already ships Tencent's own English translation (used on the international
+  site), but never lets you pick it. The extension turns it on before the app starts, both on the main site and
+  in the separate **Studio** app (`/studio/...`). No flashes of Chinese, nothing in the app's logic is changed.
+- **Better English.** ~620 fixes over Tencent's translation: mistranslations (*"Degreasing treatment"* →
+  *"Remove Baked Lighting"*, *"Bone Binding"* → *"Rigging & Skinning"*), Chinglish (*"Copy Success"* → *"Copied"*),
+  consistent terminology and shorter button labels.
+- **Leftovers translated too.** Hard-coded strings, login dialog, UI-kit texts and server messages go through
+  a ~1,900-entry dictionary; anything else is translated by Chrome's built-in **on-device** Translator
+  (nothing is sent to third-party servers) and cached.
+- **Tooltips for 3D terms** — face count, retopology, quads vs triangles, baked normals, UV, PBR, rigging,
+  motion, component split, seed, export formats, etc.: what it is and what to choose.
+  Terms with a tooltip have a dotted underline. **Alt+H** toggles tooltips.
+  ⚠️ Tooltip texts are currently **in Russian only** — English versions are welcome as a PR (`tools/hints_ru.json`).
+- **Neater look, same design.** Inter font for Latin/Cyrillic (the site expects *PingFang SC*, missing on
+  Windows/Linux), no words broken mid-line, thin dark scrollbars, full text on hover for truncated labels.
+- Text you type (prompts, inputs) is never touched.
 
-## Отладка
-В консоли страницы: `__hyru.stats()`, `__hyru.missing()` (строки, которых нет в словаре).
-Найденное добавлять в `tools/manual_zh_en.json`.
+## Install
 
-## Обновление словаря после обновления сайта
-```
-python3 tools/build_dict.py      # заново читает index.js с сайта → src/dict.js
-node tools/smoke.mjs [url] [--click="Start Using"] [--off]   # headless Chrome через CDP
-```
+1. Download the repo: **Code → Download ZIP** (or the zip from [Releases](../../releases)) and unpack it.
+2. Open `chrome://extensions`, enable **Developer mode** (top right).
+3. Click **Load unpacked** and select the unpacked folder (the one with `manifest.json`).
+4. Open or reload https://3d.hunyuan.tencent.com.
+
+Works in Chrome and other Chromium browsers (Edge, Brave, Yandex Browser). The fallback machine translator
+needs Chrome's Translator API (Chrome 138+); it downloads a language model after your first click on the page.
+Without it, everything else still works.
+
+## Troubleshooting
+
+Open DevTools (F12) → Console (context **top**):
+
+- `__hyru.stats()` — status. `bundlePatched: true` means the built-in English is active
+  (`forcedLng: "en"` in Studio). `mtState: "ready"` means the on-device translator works.
+- `__hyru.missing()` — Chinese strings that are not in the dictionary. Please paste them into an issue.
+
+## How it works
+
+| File | What it does |
+|---|---|
+| `src/i18n-hook.js` | Main app: intercepts `JSON.parse` of the i18n bundles and copies English values into the Chinese bundle. Studio: forces `lng: "en"` in `i18next.init` via a short-lived `defaultNS` getter. Applies `overrides.js`. |
+| `src/dom-translate.js` | MutationObserver-based translation of remaining text and attributes: dictionary → `{{placeholder}}` patterns → Chrome Translator API with a localStorage cache. |
+| `src/hints.js`, `src/theme.css` | Tooltips, Alt+H, titles for truncated labels; font and small style fixes. |
+| `tools/build_dict.py` | Rebuilds `src/dict.js`, `src/overrides.js`, `src/hints-data.js` from the live site plus `tools/*.json`. |
+| `tools/smoke.mjs` | Headless Chrome smoke test via CDP, injects scripts the same way the extension does. |
+
+After the site updates: `python3 tools/build_dict.py` (needs Python 3 and Node 18+), then reload the extension.
+Edit wording in `tools/overrides_en.json` (by i18n key) or `tools/manual_zh_en.json` (by Chinese text).
+
+## Known limitations
+
+- Pages behind login were tested by a real user, not by the automated smoke test (the site requires a Chinese-ecosystem login).
+- Text baked into images (banners, the login illustration) cannot be translated.
+- The international site `3d.hunyuanglobal.com` is not supported: it has native English, but blocked us from
+  both Russian and EU hosting IPs.
+
+## Disclaimer & license
+
+Not affiliated with or endorsed by Tencent. "Hunyuan" and "Tencent" are trademarks of their owners.
+Code: [MIT](LICENSE). Font: [Inter](https://rsms.me/inter/), SIL Open Font License 1.1 (`fonts/LICENSE.txt`).
+
+---
+
+## Русский
+
+Неофициальное расширение Chrome для [Tencent Hunyuan 3D](https://3d.hunyuan.tencent.com).
+Китайский сайт — тот, что реально открывается из России, но интерфейс у него только на китайском.
+Расширение переводит его на английский, исправляет кривые формулировки и добавляет **подсказки на русском** к 3D-терминам.
+
+### Что умеет
+
+- **Английский везде** — включает родной английский перевод Tencent (на основном сайте и в Studio `/studio/...`) до загрузки приложения, без мелькания китайского.
+- **Нормальный английский** — около 620 исправлений: ошибки перевода, «Chinglish», единые термины, короткие кнопки.
+- **Остатки** — словарь на ~1900 строк, а что не нашлось — встроенный в Chrome офлайн-переводчик (ничего не уходит на сторонние серверы).
+- **Подсказки на русском** к ~70 терминам: полигоны, ретопология, quads/triangles, запекание нормалей, UV, PBR, риг, анимация, разделение на части, seed, форматы экспорта — что это и что выбирать. Термины с подсказкой подчёркнуты пунктиром, **Alt+H** — вкл/выкл.
+- **Аккуратнее, дизайн тот же** — шрифт Inter, слова не рвутся посередине, тонкие скроллбары, полный текст у обрезанных надписей.
+- Поля ввода (промпты) не трогает.
+
+### Установка
+
+1. **Code → Download ZIP** (или zip из [Releases](../../releases)), распаковать.
+2. `chrome://extensions` → включить **Режим разработчика**.
+3. **Загрузить распакованное расширение** → выбрать папку с `manifest.json`.
+4. Открыть или обновить https://3d.hunyuan.tencent.com.
+
+Подходит для Chrome, Edge, Brave, Яндекс Браузера. Офлайн-переводчику нужен Chrome 138+, модель он скачает после первого клика по странице; без него остальное работает.
+
+### Если что-то не переведено
+
+F12 → Console (контекст **top**): `__hyru.stats()` — состояние, `__hyru.missing()` — строки, которых нет в словаре. Пришлите их в Issues.
+
+### Ограничения
+
+- Не связано с Tencent. Картинки с китайским текстом не переводятся.
+- Международная версия `3d.hunyuanglobal.com` не поддерживается — она блокирует российские IP и IP хостингов/VPN.

@@ -62,7 +62,7 @@ try {
   const text = await ev("document.body.innerText");
   const cjk = (text.match(/[\u4e00-\u9fff]+/g) || []);
   const shot = await send("Page.captureScreenshot", { format: "png" });
-  const out = join("/tmp/opencode", `hyru-smoke${off ? "-off" : ""}.png`);
+  const out = join(tmpdir(), `hyru-smoke${off ? "-off" : ""}.png`);
   writeFileSync(out, Buffer.from(shot.result.data, "base64"));
   console.log("stats:", stats);
   console.log("title:", await ev("document.title"));
