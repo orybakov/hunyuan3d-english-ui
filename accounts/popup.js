@@ -77,7 +77,7 @@ async function render() {
     name.textContent = a.name;
     const sub = document.createElement("span");
     sub.className = "sub";
-    sub.textContent = active ? "active" : a.expired ? "session expired — log in again and save" : a.checkedAt ? `checked ${ago(a.checkedAt)}` : "";
+    sub.textContent = active ? "active" : a.expired ? "expired — log in again & save" : a.checkedAt ? `checked ${ago(a.checkedAt)}` : "";
     name.append(sub);
 
     const ren = document.createElement("button");
@@ -86,8 +86,11 @@ async function render() {
     ren.title = "Rename";
     ren.onclick = (e) => {
       e.stopPropagation();
-      const n = prompt("Account name", a.name);
-      if (n) busy("", () => call("rename", { id: a.id, name: n }));
+      li.onclick = null;
+      li.textContent = "";
+      li.append(
+        nameForm(a.name, "Account name", (n) => (n ? busy("", () => call("rename", { id: a.id, name: n })) : render()), render)
+      );
     };
     const del = document.createElement("button");
     del.className = "icon";
@@ -95,7 +98,13 @@ async function render() {
     del.title = "Forget this account (does not log out on the site)";
     del.onclick = (e) => {
       e.stopPropagation();
-      if (confirm(`Forget "${a.name}"?`)) busy("", () => call("remove", { id: a.id }));
+      if (del.classList.contains("confirm")) return busy("", () => call("remove", { id: a.id }));
+      del.classList.add("confirm");
+      del.textContent = "Forget?";
+      setTimeout(() => {
+        del.classList.remove("confirm");
+        del.textContent = "✕";
+      }, 3000);
     };
 
     li.append(name, quotaEl(a.quota), ren, del);
@@ -111,9 +120,41 @@ async function render() {
   $("#refresh").disabled = !st.accounts.length;
 }
 
+// Inline name input: window.prompt() is clipped inside extension popups.
+function nameForm(value, placeholder, onOk, onCancel) {
+  const f = document.createElement("form");
+  f.className = "ask";
+  const input = document.createElement("input");
+  input.value = value;
+  input.placeholder = placeholder;
+  input.maxLength = 40;
+  const ok = document.createElement("button");
+  ok.textContent = "OK";
+  const no = document.createElement("button");
+  no.type = "button";
+  no.className = "ghost";
+  no.textContent = "Cancel";
+  f.onclick = (e) => e.stopPropagation();
+  f.onsubmit = (e) => {
+    e.preventDefault();
+    onOk(input.value.trim());
+  };
+  no.onclick = onCancel;
+  input.onkeydown = (e) => e.key === "Escape" && (e.preventDefault(), onCancel());
+  f.append(input, ok, no);
+  setTimeout(() => input.focus(), 0);
+  return f;
+}
+
 $("#save").onclick = () => {
-  const n = prompt("Name for this account (leave empty to use the nickname)", "");
-  if (n !== null) busy("Saving…", () => call("save", { name: n }));
+  const box = $("#ask");
+  box.textContent = "";
+  box.append(
+    nameForm("", "Name (empty = nickname)", (n) => {
+      box.textContent = "";
+      busy("Saving…", () => call("save", { name: n }));
+    }, () => (box.textContent = ""))
+  );
 };
 $("#add").onclick = () =>
   busy("Signing out…", async () => {

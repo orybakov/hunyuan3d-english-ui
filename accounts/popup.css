@@ -34,7 +34,8 @@ button:hover { filter: brightness(1.15); }
 button:disabled { opacity: 0.5; cursor: default; }
 #current { color: var(--muted); font-size: 12px; margin-bottom: 8px; }
 #current b { color: var(--text); font-weight: 500; }
-ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
+ul { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: minmax(0, 1fr); gap: 6px; }
+html, body { overflow-x: hidden; }
 li {
   display: flex;
   align-items: center;
@@ -55,6 +56,22 @@ li .icon { background: none; border: 0; color: var(--muted); padding: 2px 4px; }
 li .icon:hover { color: var(--text); }
 footer { display: flex; gap: 8px; margin-top: 10px; }
 footer button { flex: 1; }
+.ask { display: flex; gap: 6px; width: 100%; }
+#ask .ask { margin-top: 8px; }
+.ask input {
+  flex: 1;
+  min-width: 0;
+  width: 0;
+  padding: 6px 8px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--bg);
+  color: var(--text);
+  font: inherit;
+}
+.ask input:focus { outline: none; border-color: var(--accent); }
+.ask button { padding: 6px 8px; flex: none; }
+li .icon.confirm { color: #ff6b6b; font-size: 11px; white-space: nowrap; }
 #msg { min-height: 1em; margin: 8px 0 0; color: var(--muted); font-size: 12px; }
 #msg.err { color: #ff6b6b; }
 #empty { color: var(--muted); font-size: 12px; }
