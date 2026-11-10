@@ -1,0 +1,248 @@
+// Hunyuan 3D Account Switcher: the site keeps the login in cookies, so an "account" is a cookie snapshot.
+// Storage (chrome.storage.local): { accounts: [{ id, name, userId, cookies, quota, checkedAt }], activeId }
+
+const ORIGIN = "https://3d.hunyuan.tencent.com";
+const SITE = ORIGIN + "/";
+const HEADERS = { "x-source": "web", "x-product": "hunyuan3d", "Content-Type": "application/json" };
+
+const load = async () => {
+  const s = await chrome.storage.local.get(["accounts", "activeId"]);
+  return { accounts: s.accounts || [], activeId: s.activeId || null };
+};
+const store = (state) => chrome.storage.local.set(state);
+
+async function siteTab() {
+  const tabs = await chrome.tabs.query({ url: ORIGIN + "/*" });
+  return tabs.find((t) => t.active) || tabs[0] || null;
+}
+
+// API calls run inside an open site tab when possible (same origin, exactly like the site), otherwise from here.
+async function api(path, body) {
+  const tab = await siteTab();
+  if (tab && tab.status === "complete") {
+    try {
+      const [r] = await chrome.scripting.executeScript({
+        target: { tabId: tab.id },
+        world: "MAIN",
+        args: [path, body, HEADERS],
+        func: async (path, body, headers) => {
+          const res = await fetch(path, {
+            method: body ? "POST" : "GET",
+            credentials: "include",
+            headers,
+            body: body ? JSON.stringify(body) : undefined,
+          });
+          return res.json();
+        },
+      });
+      if (r && r.result) return r.result;
+    } catch (e) {
+      // tab may be navigating or showing an error page — fall back
+    }
+  }
+  const res = await fetch(ORIGIN + path, {
+    method: body ? "POST" : "GET",
+    credentials: "include",
+    headers: HEADERS,
+    body: body ? JSON.stringify(body) : undefined,
+  });
+  return res.json();
+}
+
+async function whoAmI() {
+  try {
+    const u = await api("/api/3d/getuserinfo");
+    const d = u && u.data;
+    if (!d || u.error) return null;
+    const id = d.userId ?? d.userid ?? d.uid ?? d.id;
+    return {
+      userId: id != null ? String(id) : null,
+      nickname: d.nickname || d.nickName || d.userName || d.name || d.email || "",
+    };
+  } catch {
+    return null;
+  }
+}
+
+async function quota() {
+  try {
+    const q = await api("/api/3d/quotainfo", { sceneType: "3dCreations" });
+    const d = q && q.data;
+    if (!d || q.error) return null;
+    return { remain: d.remainQuota, total: d.totalQuota };
+  } catch {
+    return null;
+  }
+}
+
+const getCookies = () => chrome.cookies.getAll({ url: SITE });
+
+async function clearCookies() {
+  for (const c of await getCookies()) {
+    const host = c.domain.replace(/^\./, "");
+    await chrome.cookies.remove({
+      url: `https://${host}${c.path}`,
+      name: c.name,
+      storeId: c.storeId,
+      ...(c.partitionKey ? { partitionKey: c.partitionKey } : {}),
+    });
+  }
+}
+
+async function setCookies(list) {
+  for (const c of list) {
+    const host = c.domain.replace(/^\./, "");
+    const d = {
+      url: `https://${host}${c.path}`,
+      name: c.name,
+      value: c.value,
+      path: c.path,
+      secure: c.secure,
+      httpOnly: c.httpOnly,
+      sameSite: c.sameSite,
+    };
+    if (!c.hostOnly) d.domain = c.domain;
+    if (!c.session && c.expirationDate) d.expirationDate = c.expirationDate;
+    if (c.partitionKey) d.partitionKey = c.partitionKey;
+    try {
+      await chrome.cookies.set(d);
+    } catch (e) {
+      console.warn("cookie not restored", c.name, e);
+    }
+  }
+}
+
+const strip = (cs) =>
+  cs.map(({ name, value, domain, path, secure, httpOnly, sameSite, hostOnly, session, expirationDate, partitionKey }) => ({
+    name, value, domain, path, secure, httpOnly, sameSite, hostOnly, session, expirationDate, partitionKey,
+  }));
+
+// The site refreshes its session cookies, so the active account's snapshot is re-taken before leaving it.
+async function snapshotActive(state, me) {
+  me = me || (await whoAmI());
+  if (!me) return state;
+  let acc = state.accounts.find((a) => me.userId && a.userId === me.userId);
+  if (!acc) return state;
+  acc.cookies = strip(await getCookies());
+  const q = await quota();
+  if (q) Object.assign(acc, { quota: q, checkedAt: Date.now() });
+  state.activeId = acc.id;
+  return state;
+}
+
+async function reloadSiteTabs(toLogin) {
+  const tabs = await chrome.tabs.query({ url: ORIGIN + "/*" });
+  if (!tabs.length) return chrome.tabs.create({ url: SITE });
+  for (const t of tabs) {
+    if (toLogin && t.active) await chrome.tabs.update(t.id, { url: SITE });
+    else await chrome.tabs.reload(t.id);
+  }
+}
+
+const handlers = {
+  async state() {
+    const state = await load();
+    const me = await whoAmI();
+    let current = null;
+    if (me) {
+      current = { ...me, quota: await quota() };
+      const acc = state.accounts.find((a) => me.userId && a.userId === me.userId);
+      if (acc) {
+        state.activeId = acc.id;
+        if (current.quota) Object.assign(acc, { quota: current.quota, checkedAt: Date.now() });
+        await store(state);
+      }
+    }
+    return { ...state, accounts: state.accounts.map(({ cookies, ...a }) => a), current };
+  },
+
+  async save({ name }) {
+    const me = await whoAmI();
+    if (!me) throw new Error("Not logged in on 3d.hunyuan.tencent.com");
+    const state = await load();
+    let acc = state.accounts.find((a) => me.userId && a.userId === me.userId);
+    if (!acc) {
+      acc = { id: crypto.randomUUID(), userId: me.userId };
+      state.accounts.push(acc);
+    }
+    acc.name = (name || "").trim() || acc.name || me.nickname || `Account ${state.accounts.length}`;
+    acc.cookies = strip(await getCookies());
+    const q = await quota();
+    if (q) Object.assign(acc, { quota: q, checkedAt: Date.now() });
+    state.activeId = acc.id;
+    await store(state);
+  },
+
+  async switch({ id }) {
+    let state = await load();
+    const target = state.accounts.find((a) => a.id === id);
+    if (!target) throw new Error("Unknown account");
+    state = await snapshotActive(state);
+    await clearCookies();
+    await setCookies(target.cookies || []);
+    state.activeId = target.id;
+    await store(state);
+    await reloadSiteTabs(false);
+  },
+
+  // Save the current login (if it is a known account) and log out locally, so another account can sign in.
+  async addNew() {
+    const state = await snapshotActive(await load());
+    state.activeId = null;
+    await store(state);
+    await clearCookies();
+    await reloadSiteTabs(true);
+  },
+
+  async rename({ id, name }) {
+    const state = await load();
+    const acc = state.accounts.find((a) => a.id === id);
+    if (acc && name.trim()) acc.name = name.trim();
+    await store(state);
+  },
+
+  async remove({ id }) {
+    const state = await load();
+    state.accounts = state.accounts.filter((a) => a.id !== id);
+    if (state.activeId === id) state.activeId = null;
+    await store(state);
+  },
+
+  // Check remaining generations of every saved account by briefly swapping cookies, then restore the original login.
+  async refreshAll() {
+    let state = await load();
+    const me = await whoAmI();
+    state = await snapshotActive(state, me);
+    const original = strip(await getCookies());
+    try {
+      for (const acc of state.accounts) {
+        if (me && acc.userId === me.userId) continue;
+        await clearCookies();
+        await setCookies(acc.cookies || []);
+        const who = await whoAmI();
+        if (!who) {
+          acc.quota = null;
+          acc.expired = true;
+          continue;
+        }
+        acc.expired = false;
+        const q = await quota();
+        if (q) Object.assign(acc, { quota: q, checkedAt: Date.now() });
+        acc.cookies = strip(await getCookies());
+      }
+    } finally {
+      await clearCookies();
+      await setCookies(original);
+      await store(state);
+    }
+  },
+};
+
+chrome.runtime.onMessage.addListener((msg, _sender, reply) => {
+  const h = handlers[msg && msg.type];
+  if (!h) return false;
+  h(msg)
+    .then((r) => reply({ ok: true, result: r }))
+    .catch((e) => reply({ ok: false, error: String((e && e.message) || e) }));
+  return true;
+});

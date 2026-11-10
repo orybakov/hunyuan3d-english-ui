@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <link rel="stylesheet" href="popup.css" />
+</head>
+<body>
+  <header>
+    <h1>Hunyuan 3D accounts</h1>
+    <button id="refresh" class="ghost" title="Check remaining generations of all accounts">↻ Check all</button>
+  </header>
+  <section id="current"></section>
+  <ul id="list"></ul>
+  <p id="empty" hidden>No saved accounts yet. Log in on the site, then click <b>Save current</b>.</p>
+  <footer>
+    <button id="save">Save current</button>
+    <button id="add" class="ghost" title="Save the current login and sign out, so you can log in to another account">+ Add another</button>
+  </footer>
+  <p id="msg" role="status"></p>
+  <script src="popup.js"></script>
+</body>
+</html>
