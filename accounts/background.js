@@ -29,7 +29,7 @@ async function api(path, body) {
       const [r] = await chrome.scripting.executeScript({
         target: { tabId: tab.id },
         world: "MAIN",
-        args: [path, body, HEADERS],
+        args: [path, body ?? null, HEADERS],
         func: async (path, body, headers) => {
           const res = await fetch(path, {
             method: body ? "POST" : "GET",
@@ -62,12 +62,13 @@ async function api(path, body) {
 async function whoAmI() {
   try {
     const u = await api("/api/3d/getuserinfo");
-    const d = u && u.data;
-    if (!d || u.error) return null;
+    // getuserinfo answers with the user object at the top level; other endpoints wrap it in { data }
+    const d = u && !u.error ? (u.data && typeof u.data === "object" ? u.data : u) : null;
+    if (!d || !(d.userId ?? d.userid ?? d.uid)) return null;
     const id = d.userId ?? d.userid ?? d.uid ?? d.id;
     return {
       userId: id != null ? String(id) : null,
-      nickname: d.nickname || d.nickName || d.userName || d.name || d.email || "",
+      nickname: d.nickname || d.nickName || d.userName || d.name || d.email || d.phoneNumber || "",
     };
   } catch (e) {
     if (lastDiag) lastDiag.steps.push(`error: ${(e && e.message) || e}`);
@@ -78,7 +79,7 @@ async function whoAmI() {
 async function quota() {
   try {
     const q = await api("/api/3d/quotainfo", { sceneType: "3dCreations" });
-    const d = q && q.data;
+    const d = q && !q.error ? (q.data && typeof q.data === "object" ? q.data : q) : null;
     if (!d || q.error) return null;
     return { remain: d.remainQuota, total: d.totalQuota };
   } catch {
@@ -86,7 +87,42 @@ async function quota() {
   }
 }
 
-const getCookies = () => chrome.cookies.getAll({ url: SITE });
+// All cookies the site gets, including partitioned ones (getAll({ url }) alone can return nothing).
+const HOST = new URL(SITE).hostname;
+const applies = (c) => {
+  const d = c.domain.replace(/^\./, "");
+  return d === HOST || HOST.endsWith("." + d);
+};
+async function getCookies() {
+  const seen = new Map();
+  const queries = [{ url: SITE }, { domain: "tencent.com" }, { url: SITE, partitionKey: {} }, { domain: "tencent.com", partitionKey: {} }];
+  for (const q of queries) {
+    let list = [];
+    try {
+      list = await chrome.cookies.getAll(q);
+    } catch {}
+    for (const c of list) {
+      if (!applies(c)) continue;
+      const key = [c.name, c.domain, c.path, c.storeId, JSON.stringify(c.partitionKey || null)].join("|");
+      seen.set(key, c);
+    }
+  }
+  return [...seen.values()];
+}
+
+async function cookieDiag() {
+  const parts = [];
+  for (const [label, q] of [["url", { url: SITE }], ["domain", { domain: "tencent.com" }], ["all-partitions", { url: SITE, partitionKey: {} }]]) {
+    try {
+      parts.push(`${label}=${(await chrome.cookies.getAll(q)).length}`);
+    } catch (e) {
+      parts.push(`${label}: ${(e && e.message) || e}`);
+    }
+  }
+  const stores = await chrome.cookies.getAllCookieStores();
+  parts.push(`stores=${stores.map((s) => s.id).join("/")}`);
+  return parts.join(", ") + "; names: " + (await getCookies()).map((c) => c.name).join(", ");
+}
 
 async function clearCookies() {
   for (const c of await getCookies()) {
@@ -138,7 +174,8 @@ async function snapshotActive(state, me) {
     acc = { id: crypto.randomUUID(), userId: me.userId, name: me.nickname || `Account ${state.accounts.length + 1}` };
     state.accounts.push(acc);
   }
-  acc.cookies = strip(await getCookies());
+  const cookies = strip(await getCookies());
+  if (cookies.length) acc.cookies = cookies;
   const q = await quota();
   if (q) Object.assign(acc, { quota: q, checkedAt: Date.now() });
   state.activeId = acc.id;
@@ -168,7 +205,7 @@ const handlers = {
         await store(state);
       }
     }
-    const diag = me ? null : { ...lastDiag, cookies: (await getCookies()).map((c) => c.name).join(", ") };
+    const diag = me ? null : { ...lastDiag, cookies: await cookieDiag() };
     return { ...state, accounts: state.accounts.map(({ cookies, ...a }) => a), current, diag };
   },
 
@@ -181,8 +218,10 @@ const handlers = {
       acc = { id: crypto.randomUUID(), userId: me.userId };
       state.accounts.push(acc);
     }
+    const cookies = strip(await getCookies());
+    if (!cookies.length) throw new Error("Can't read the site's cookies — " + (await cookieDiag()));
     acc.name = (name || "").trim() || acc.name || me.nickname || `Account ${state.accounts.length}`;
-    acc.cookies = strip(await getCookies());
+    acc.cookies = cookies;
     const q = await quota();
     if (q) Object.assign(acc, { quota: q, checkedAt: Date.now() });
     state.activeId = acc.id;
@@ -193,6 +232,7 @@ const handlers = {
     let state = await load();
     const target = state.accounts.find((a) => a.id === id);
     if (!target) throw new Error("Unknown account");
+    if (!target.cookies || !target.cookies.length) throw new Error("This account has no saved login — log in to it and click Save current");
     state = await snapshotActive(state);
     await clearCookies();
     await setCookies(target.cookies || []);
