@@ -7,7 +7,7 @@ The Chinese site is the one that actually works from most regions, but its inter
 This extension switches it to English, cleans up the wording and adds tooltips that explain 3D terms.
 
 ![Tooltip demo](docs/hint.png)
-<sub>Tooltip demo on the login page (test button). Inside the app, tooltips appear on real buttons and settings.</sub>
+<sub>Tooltip demo (test button on the login page): English and Russian. Inside the app, tooltips appear on real buttons and settings.</sub>
 
 ## Features
 
@@ -22,8 +22,8 @@ This extension switches it to English, cleans up the wording and adds tooltips t
   (nothing is sent to third-party servers) and cached.
 - **Tooltips for 3D terms** — face count, retopology, quads vs triangles, baked normals, UV, PBR, rigging,
   motion, component split, seed, export formats, etc.: what it is and what to choose.
-  Terms with a tooltip have a dotted underline. **Alt+H** toggles tooltips.
-  ⚠️ Tooltip texts are currently **in Russian only** — English versions are welcome as a PR (`tools/hints_ru.json`).
+  Terms with a tooltip have a dotted underline. Tooltips are in **English or Russian**, picked from your browser
+  language. **Alt+H** — show/hide tooltips, **Alt+L** — switch tooltip language.
 - **Neater look, same design.** Inter font for Latin/Cyrillic (the site expects *PingFang SC*, missing on
   Windows/Linux), no words broken mid-line, thin dark scrollbars, full text on hover for truncated labels.
 - Text you type (prompts, inputs) is never touched.
@@ -53,11 +53,12 @@ Open DevTools (F12) → Console (context **top**):
 |---|---|
 | `src/i18n-hook.js` | Main app: intercepts `JSON.parse` of the i18n bundles and copies English values into the Chinese bundle. Studio: forces `lng: "en"` in `i18next.init` via a short-lived `defaultNS` getter. Applies `overrides.js`. |
 | `src/dom-translate.js` | MutationObserver-based translation of remaining text and attributes: dictionary → `{{placeholder}}` patterns → Chrome Translator API with a localStorage cache. |
-| `src/hints.js`, `src/theme.css` | Tooltips, Alt+H, titles for truncated labels; font and small style fixes. |
+| `src/hints.js`, `src/theme.css` | Tooltips (texts in `tools/hints_en.json`, `tools/hints_ru.json`), Alt+H / Alt+L, titles for truncated labels; font and small style fixes. |
 | `tools/build_dict.py` | Rebuilds `src/dict.js`, `src/overrides.js`, `src/hints-data.js` from the live site plus `tools/*.json`. |
 | `tools/smoke.mjs` | Headless Chrome smoke test via CDP, injects scripts the same way the extension does. |
 
 After the site updates: `python3 tools/build_dict.py` (needs Python 3 and Node 18+), then reload the extension.
+Want tooltips in another language? Add `tools/hints_<lang>.json` with the same keys and the language to `build_dict.py` / `hints.js` — PRs welcome.
 Edit wording in `tools/overrides_en.json` (by i18n key) or `tools/manual_zh_en.json` (by Chinese text).
 
 ## Known limitations
@@ -78,14 +79,14 @@ Code: [MIT](LICENSE). Font: [Inter](https://rsms.me/inter/), SIL Open Font Licen
 
 Неофициальное расширение Chrome для [Tencent Hunyuan 3D](https://3d.hunyuan.tencent.com).
 Китайский сайт — тот, что реально открывается из России, но интерфейс у него только на китайском.
-Расширение переводит его на английский, исправляет кривые формулировки и добавляет **подсказки на русском** к 3D-терминам.
+Расширение переводит его на английский, исправляет кривые формулировки и добавляет подсказки к 3D-терминам на русском (или английском).
 
 ### Что умеет
 
 - **Английский везде** — включает родной английский перевод Tencent (на основном сайте и в Studio `/studio/...`) до загрузки приложения, без мелькания китайского.
 - **Нормальный английский** — около 620 исправлений: ошибки перевода, «Chinglish», единые термины, короткие кнопки.
 - **Остатки** — словарь на ~1900 строк, а что не нашлось — встроенный в Chrome офлайн-переводчик (ничего не уходит на сторонние серверы).
-- **Подсказки на русском** к ~70 терминам: полигоны, ретопология, quads/triangles, запекание нормалей, UV, PBR, риг, анимация, разделение на части, seed, форматы экспорта — что это и что выбирать. Термины с подсказкой подчёркнуты пунктиром, **Alt+H** — вкл/выкл.
+- **Подсказки на русском и английском** к ~70 терминам: полигоны, ретопология, quads/triangles, запекание нормалей, UV, PBR, риг, анимация, разделение на части, seed, форматы экспорта — что это и что выбирать. Язык берётся из языка браузера. Термины с подсказкой подчёркнуты пунктиром. **Alt+H** — вкл/выкл, **Alt+L** — сменить язык подсказок.
 - **Аккуратнее, дизайн тот же** — шрифт Inter, слова не рвутся посередине, тонкие скроллбары, полный текст у обрезанных надписей.
 - Поля ввода (промпты) не трогает.
 

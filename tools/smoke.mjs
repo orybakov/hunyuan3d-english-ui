@@ -23,7 +23,7 @@ const code = [cssInject, ...manifest.content_scripts[0].js.map((f) => readFileSy
 const port = 9333;
 const chrome = spawn("google-chrome-stable", [
   "--headless=new", `--remote-debugging-port=${port}`, `--user-data-dir=${mkdtempSync(join(tmpdir(), "hyru-"))}`,
-  "--no-first-run", "--window-size=1600,1000", "--lang=en-US", "about:blank",
+  "--no-first-run", "--window-size=1600,1000", `--lang=${process.argv.find((a) => a.startsWith("--lang="))?.slice(7) || "en-US"}`, "about:blank",
 ], { stdio: "ignore" });
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 try {
@@ -38,6 +38,11 @@ try {
   ws.addEventListener("message", (e) => { const m = JSON.parse(e.data); if (m.id && wait.has(m.id)) { wait.get(m.id)(m); wait.delete(m.id); } });
   const send = (method, params = {}) => new Promise((r) => { const i = ++id; wait.set(i, r); ws.send(JSON.stringify({ id: i, method, params })); });
   await send("Page.enable");
+  const lang = process.argv.find((a) => a.startsWith("--lang="))?.slice(7);
+  // headless не даёт поменять navigator.language флагами — подменяем для теста
+  if (lang) await send("Page.addScriptToEvaluateOnNewDocument", {
+    source: `Object.defineProperty(Navigator.prototype, "language", { get: () => ${JSON.stringify(lang)} });`,
+  });
   if (!off) await send("Page.addScriptToEvaluateOnNewDocument", { source: code });
   await send("Page.navigate", { url });
   await sleep(15000);
@@ -54,6 +59,7 @@ try {
     await ev(`(() => { const b = document.createElement("button"); b.id = "hyru-test"; b.textContent = "Smart Topology";
       b.style.cssText = "position:fixed;left:700px;top:120px;z-index:99999;padding:8px 14px"; document.body.appendChild(b); })()`);
     await sleep(300);
+    console.log("navigator.language:", await ev("navigator.language"));
     console.log("marked:", await ev(`document.getElementById("hyru-test").getAttribute("data-hyru-hint")`));
     await send("Input.dispatchMouseEvent", { type: "mouseMoved", x: 740, y: 135 });
     await sleep(900);

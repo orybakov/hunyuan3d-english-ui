@@ -841,6 +841,7 @@ window.__HYRU_DICT = {
 "上传单图": "Single Image",
 "上传多视图": "Multi-View",
 "多图模式暂不支持 V3.5": "Multi-image mode is not supported in V3.5",
+"几何生成暂不支持图生多视图资产": "Multi-view concept assets are not supported for geometry generation",
 "请输入提示词": "Enter a prompt",
 "或选择本地上传": "Or Choose a Local File",
 "更高面数具有更多细节，如模型面数超过50万，不支持进行自动绑骨": "Higher face counts provide more detail. Automatic rigging is not supported for models with over 500,000 faces.",

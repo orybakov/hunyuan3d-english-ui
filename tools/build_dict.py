@@ -59,10 +59,13 @@ def main():
         "// Сгенерировано tools/build_dict.py из tools/overrides_en.json\n"
         "window.__HYRU_OVERRIDES = " + json.dumps(ov, ensure_ascii=False, indent=0) + ";\n", "utf-8")
 
-    hints = json.loads((ROOT / "tools/hints_ru.json").read_text("utf-8"))
-    hints = {k: {kk: vv for kk, vv in v.items() if vv} for k, v in hints.items()}
+    # подсказки: {label: {ru: {d, r}, en: {d, r}}}
+    hints = {}
+    for lang in ("ru", "en"):
+        for k, v in json.loads((ROOT / f"tools/hints_{lang}.json").read_text("utf-8")).items():
+            hints.setdefault(k, {})[lang] = {kk: vv for kk, vv in v.items() if vv}
     (ROOT / "src/hints-data.js").write_text(
-        "// Сгенерировано tools/build_dict.py из tools/hints_ru.json\n"
+        "// Сгенерировано tools/build_dict.py из tools/hints_{ru,en}.json\n"
         "window.__HYRU_HINTS = " + json.dumps(hints, ensure_ascii=False, indent=0) + ";\n", "utf-8")
 
     pairs = [(flat(zh), {**flat(en), **ov.get("main", {})})]

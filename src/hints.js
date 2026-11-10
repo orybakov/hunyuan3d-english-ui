@@ -1,11 +1,14 @@
 // Подсказки к элементам интерфейса + всплывающий полный текст у обрезанных надписей.
-// Данные: window.__HYRU_HINTS = { "label": { d: "что это", r: "что выбирать" } } (src/hints-data.js).
+// Данные: window.__HYRU_HINTS = { "label": { ru: {d, r}, en: {d, r} } } (src/hints-data.js).
+// Язык подсказок — по языку браузера (ru → русский, иначе английский), Alt+L — переключить.
 // Alt+H — включить/выключить подсказки.
 (() => {
   const RAW = window.__HYRU_HINTS || {};
   const norm = (s) => s.replace(/\s+/g, " ").trim().toLowerCase();
   const hints = new Map(Object.entries(RAW).map(([k, v]) => [norm(k), { ...v, label: k }]));
   const OFF_KEY = "hyru_hints_off";
+  const LANG_KEY = "hyru_hints_lang";
+  let lang = localStorage.getItem(LANG_KEY) || ((navigator.language || "").toLowerCase().startsWith("ru") ? "ru" : "en");
   let off = localStorage.getItem(OFF_KEY) === "1";
   const MAX_LABEL = Math.max(0, ...[...hints.keys()].map((k) => k.length));
 
@@ -52,12 +55,14 @@
   }
 
   function show(el) {
-    const h = hints.get(el.getAttribute("data-hyru-hint"));
+    const entry = hints.get(el.getAttribute("data-hyru-hint"));
+    if (!entry) return;
+    const h = entry[lang] || entry.en || entry.ru;
     if (!h) return;
     const t = ensureTip();
     t.textContent = "";
     const b = document.createElement("b");
-    b.textContent = h.label;
+    b.textContent = entry.label;
     t.appendChild(b);
     t.appendChild(document.createTextNode(h.d || ""));
     if (h.r) {
@@ -125,6 +130,11 @@
         localStorage.setItem(OFF_KEY, off ? "1" : "0");
         setOffClass();
         hide();
+        e.preventDefault();
+      } else if (e.altKey && !e.ctrlKey && !e.metaKey && e.code === "KeyL") {
+        lang = lang === "ru" ? "en" : "ru";
+        localStorage.setItem(LANG_KEY, lang);
+        if (current) show(current);
         e.preventDefault();
       }
     },
