@@ -122,7 +122,11 @@ async function snapshotActive(state, me) {
   me = me || (await whoAmI());
   if (!me) return state;
   let acc = state.accounts.find((a) => me.userId && a.userId === me.userId);
-  if (!acc) return state;
+  if (!acc) {
+    // an unsaved login would be lost on switch — keep it
+    acc = { id: crypto.randomUUID(), userId: me.userId, name: me.nickname || `Account ${state.accounts.length + 1}` };
+    state.accounts.push(acc);
+  }
   acc.cookies = strip(await getCookies());
   const q = await quota();
   if (q) Object.assign(acc, { quota: q, checkedAt: Date.now() });
