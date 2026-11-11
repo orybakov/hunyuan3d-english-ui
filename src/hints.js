@@ -5,10 +5,16 @@
 (() => {
   const RAW = window.__HYRU_HINTS || {};
   const norm = (s) => s.replace(/\s+/g, " ").trim().toLowerCase();
+  if (window.__HYRU_CFG && window.__HYRU_CFG.hints === false) return; // switched off in the popup
   const hints = new Map(Object.entries(RAW).map(([k, v]) => [norm(k), { ...v, label: k }]));
+  // Russian UI: the same hints are also found by the Russian label
+  if (window.__HYRU_LANG === "ru")
+    for (const [k, v] of Object.entries(RAW)) if (v.alt && !hints.has(norm(v.alt))) hints.set(norm(v.alt), { ...v, label: v.alt });
   const OFF_KEY = "hyru_hints_off";
   const LANG_KEY = "hyru_hints_lang";
-  let lang = localStorage.getItem(LANG_KEY) || ((navigator.language || "").toLowerCase().startsWith("ru") ? "ru" : "en");
+  let lang =
+    localStorage.getItem(LANG_KEY) ||
+    (window.__HYRU_LANG === "ru" || (navigator.language || "").toLowerCase().startsWith("ru") ? "ru" : "en");
   let off = localStorage.getItem(OFF_KEY) === "1";
   const MAX_LABEL = Math.max(0, ...[...hints.keys()].map((k) => k.length));
 

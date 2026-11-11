@@ -292,7 +292,7 @@ window.__HYRU_OVERRIDES = {
 "messages.failedDelInterface": "Delete request failed",
 "messages.assetsNotEnoughQuota": "You’ve reached the generation limit for this asset.",
 "brand.name": "Tencent Hunyuan 3D",
-"brand.nameStr": "Tencent H<span class=\"brand-name-Y\">Y</span> 3D",
+"brand.nameStr": "Tencent Hunyuan 3D",
 "brand.description": "Tencent Hunyuan 3D is an all-in-one AI platform for 3D content creation, powered by the Hunyuan 3D 2.5 model. It supports Text to 3D, Image to 3D, Sketch to 3D, character generation, animation, and texture generation, with a focus on high-quality low-poly models.",
 "lab.capabilities": "Explore a range of 3D generation tools, with more on the way.",
 "lab.intelligentTopology.triangles": "Triangles",

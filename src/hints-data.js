@@ -8,7 +8,8 @@ window.__HYRU_HINTS = {
 "en": {
 "d": "Generates a model from a text description.",
 "r": "Describe a single object: what it is, shape, material, style. No background or scene."
-}
+},
+"alt": "Текст в 3D"
 },
 "Image to 3D": {
 "ru": {
@@ -18,7 +19,8 @@ window.__HYRU_HINTS = {
 "en": {
 "d": "Generates a model from one image.",
 "r": "Works best with one object, front view, fully in frame, plain background."
-}
+},
+"alt": "Изображение в 3D"
 },
 "Image/Text to 3D": {
 "ru": {
@@ -28,7 +30,8 @@ window.__HYRU_HINTS = {
 "en": {
 "d": "The main generator: a model from an image or from text.",
 "r": "If you have an image, use it — results are more accurate than from text."
-}
+},
+"alt": "Изображение/текст в 3D"
 },
 "Sketch to 3D": {
 "ru": {
@@ -38,7 +41,8 @@ window.__HYRU_HINTS = {
 "en": {
 "d": "A model from a hand-drawn sketch plus a text description.",
 "r": "Draw a clean outline of one object; describe material and style in the text."
-}
+},
+"alt": "Скетч в 3D"
 },
 "Multi-View": {
 "ru": {
@@ -48,7 +52,8 @@ window.__HYRU_HINTS = {
 "en": {
 "d": "Several photos of the same object from different sides (front, side, back).",
 "r": "Gives the most accurate shape, especially the back. Views should match in scale and lighting."
-}
+},
+"alt": "Несколько ракурсов"
 },
 "Multi-View to 3D": {
 "ru": {
@@ -58,7 +63,8 @@ window.__HYRU_HINTS = {
 "en": {
 "d": "A model from several views of the same object.",
 "r": "At least 2 standard views: front + side or back."
-}
+},
+"alt": "Несколько ракурсов в 3D"
 },
 "Model to 3D": {
 "ru": {
@@ -68,7 +74,8 @@ window.__HYRU_HINTS = {
 "en": {
 "d": "Regenerates your own uploaded model (FBX/GLB/OBJ).",
 "r": "Useful to improve a rough or scanned model."
-}
+},
+"alt": "Модель для 3D"
 },
 "Geometry": {
 "ru": {
@@ -78,7 +85,8 @@ window.__HYRU_HINTS = {
 "en": {
 "d": "Shape only, no color (grey \"clay\").",
 "r": "Faster and cheaper. You can add a texture later."
-}
+},
+"alt": "Геометрия"
 },
 "Geometry + Texture": {
 "ru": {
@@ -88,7 +96,8 @@ window.__HYRU_HINTS = {
 "en": {
 "d": "Shape with a color texture in one go.",
 "r": "Choose it when you need a finished result in one step."
-}
+},
+"alt": "Геометрия + Текстура"
 },
 "Untextured Model": {
 "ru": {
@@ -96,7 +105,8 @@ window.__HYRU_HINTS = {
 },
 "en": {
 "d": "A model without texture — geometry only."
-}
+},
+"alt": "Нетекстурированная модель"
 },
 "Face Count": {
 "ru": {
@@ -106,7 +116,8 @@ window.__HYRU_HINTS = {
 "en": {
 "d": "Number of polygons (faces). More means more detail, but a heavier model.",
 "r": "Mobile/games: 5–30k. PC games: 30–100k. Rendering/printing: more is fine."
-}
+},
+"alt": "Количество полигонов"
 },
 "Set Face Count": {
 "ru": {
@@ -116,7 +127,8 @@ window.__HYRU_HINTS = {
 "en": {
 "d": "Set an exact polygon count manually.",
 "r": "Mobile/games: 5–30k. PC games: 30–100k."
-}
+},
+"alt": "количество полигонов"
 },
 "Auto Face Count": {
 "ru": {
@@ -126,7 +138,8 @@ window.__HYRU_HINTS = {
 "en": {
 "d": "Polygon count is chosen automatically based on object complexity.",
 "r": "A good default."
-}
+},
+"alt": "Авто количество полигонов"
 },
 "Smart Topology": {
 "ru": {
@@ -136,7 +149,8 @@ window.__HYRU_HINTS = {
 "en": {
 "d": "Retopology: turns a heavy, messy mesh into a clean, light (low-poly) mesh with proper edge flow.",
 "r": "Needed for games, animation and rigging. Can be skipped for static renders."
-}
+},
+"alt": "Ретопология"
 },
 "3D Smart Topology": {
 "ru": {
@@ -146,7 +160,8 @@ window.__HYRU_HINTS = {
 "en": {
 "d": "Retopology: heavy mesh → clean, light low-poly model.",
 "r": "Needed for games, animation and rigging."
-}
+},
+"alt": "3D ретопология"
 },
 "Topology": {
 "ru": {
@@ -154,7 +169,8 @@ window.__HYRU_HINTS = {
 },
 "en": {
 "d": "The structure of the mesh — how polygons are laid out."
-}
+},
+"alt": "Топология"
 },
 "Retopology": {
 "ru": {
@@ -164,7 +180,8 @@ window.__HYRU_HINTS = {
 "en": {
 "d": "Rebuilds the mesh into a clean and light one.",
 "r": "Do it before rigging and animation."
-}
+},
+"alt": "Ретопология"
 },
 "Low-Poly": {
 "ru": {
@@ -172,7 +189,8 @@ window.__HYRU_HINTS = {
 },
 "en": {
 "d": "A model with few polygons — for games and real-time."
-}
+},
+"alt": "Low-poly"
 },
 "Low-poly": {
 "ru": {
@@ -180,7 +198,8 @@ window.__HYRU_HINTS = {
 },
 "en": {
 "d": "A model with few polygons — for games and real-time."
-}
+},
+"alt": "Low-poly"
 },
 "High-Poly Model": {
 "ru": {
@@ -190,7 +209,8 @@ window.__HYRU_HINTS = {
 "en": {
 "d": "A detailed, heavy model (hundreds of thousands of polygons).",
 "r": "For rendering and printing. For games, retopologize first."
-}
+},
+"alt": "Модель High-poly"
 },
 "Quads": {
 "ru": {
@@ -200,7 +220,8 @@ window.__HYRU_HINTS = {
 "en": {
 "d": "A mesh made of four-sided polygons.",
 "r": "Choose it if you will edit or animate the model in Blender/Maya — easier to work with."
-}
+},
+"alt": "Квады"
 },
 "Triangles": {
 "ru": {
@@ -210,7 +231,8 @@ window.__HYRU_HINTS = {
 "en": {
 "d": "A mesh made of triangles.",
 "r": "Choose it for direct import into a game engine (Unity/Unreal)."
-}
+},
+"alt": "Треугольники"
 },
 "Low-Poly with Baked Normals": {
 "ru": {
@@ -220,7 +242,8 @@ window.__HYRU_HINTS = {
 "en": {
 "d": "A light model plus a normal map that bakes fine detail from the high-poly model.",
 "r": "Best option for games: looks detailed with a low polygon count."
-}
+},
+"alt": "Low-poly с запечёнными нормалями"
 },
 "Low-Poly Without Normal Map": {
 "ru": {
@@ -230,7 +253,8 @@ window.__HYRU_HINTS = {
 "en": {
 "d": "A light model without a normal map — detail is in the geometry only.",
 "r": "For stylized art, or if you will bake normals yourself."
-}
+},
+"alt": "Low-poly без карты нормалей"
 },
 "Bake": {
 "ru": {
@@ -238,7 +262,8 @@ window.__HYRU_HINTS = {
 },
 "en": {
 "d": "Baking: transfers detail (normals, color) from a detailed model to the textures of a light one."
-}
+},
+"alt": "Запекание"
 },
 "Bake Normals": {
 "ru": {
@@ -248,7 +273,8 @@ window.__HYRU_HINTS = {
 "en": {
 "d": "Bake fine detail from the high-poly model into a normal map.",
 "r": "Needed for game models after retopology."
-}
+},
+"alt": "Запечь нормали"
 },
 "UV Unwrap": {
 "ru": {
@@ -258,7 +284,8 @@ window.__HYRU_HINTS = {
 "en": {
 "d": "UV unwrapping — \"unfolds\" the model onto a flat plane so a texture can be applied.",
 "r": "Needed if you will texture it yourself (Substance, Blender)."
-}
+},
+"alt": "UV-развёртка"
 },
 "UV Unwrapping": {
 "ru": {
@@ -268,7 +295,8 @@ window.__HYRU_HINTS = {
 "en": {
 "d": "UV unwrapping — \"unfolds\" the model onto a flat plane for texturing.",
 "r": "Needed if you will texture it yourself."
-}
+},
+"alt": "UV Разворачивание"
 },
 "Semantic UV": {
 "ru": {
@@ -278,7 +306,8 @@ window.__HYRU_HINTS = {
 "en": {
 "d": "Smart unwrapping: seams follow meaningful parts (arm, head, chair leg).",
 "r": "Easier for manual texturing."
-}
+},
+"alt": "Семантика UV"
 },
 "Semantic UV Unwrap": {
 "ru": {
@@ -288,7 +317,8 @@ window.__HYRU_HINTS = {
 "en": {
 "d": "Smart unwrapping: seams follow meaningful parts of the model.",
 "r": "Easier for manual texturing."
-}
+},
+"alt": "Семантика uV-развёртка"
 },
 "Show UV Seams": {
 "ru": {
@@ -296,7 +326,8 @@ window.__HYRU_HINTS = {
 },
 "en": {
 "d": "Show UV seam lines on the model."
-}
+},
+"alt": "Показать UV Швы"
 },
 "Texture": {
 "ru": {
@@ -304,7 +335,8 @@ window.__HYRU_HINTS = {
 },
 "en": {
 "d": "The color and material of the model's surface."
-}
+},
+"alt": "Текстура"
 },
 "Texture Generation": {
 "ru": {
@@ -314,7 +346,8 @@ window.__HYRU_HINTS = {
 "en": {
 "d": "Generates a texture for an existing model (yours or a generated one).",
 "r": "Guide it with text or a reference image."
-}
+},
+"alt": "Генерация текстур"
 },
 "3D Texture Generation": {
 "ru": {
@@ -324,7 +357,8 @@ window.__HYRU_HINTS = {
 "en": {
 "d": "Generates a texture for an existing model.",
 "r": "Guide it with text or a reference image."
-}
+},
+"alt": "3D генерация текстур"
 },
 "Text to Texture": {
 "ru": {
@@ -334,7 +368,8 @@ window.__HYRU_HINTS = {
 "en": {
 "d": "A texture from a text description.",
 "r": "Describe the material: \"rusty metal\", \"polished wood\", \"anime style\"."
-}
+},
+"alt": "Преобразование текста в текстуру"
 },
 "Image to Texture": {
 "ru": {
@@ -344,7 +379,8 @@ window.__HYRU_HINTS = {
 "en": {
 "d": "A texture from a reference image.",
 "r": "Best when the image matches the model's view (front view)."
-}
+},
+"alt": "Изображение в текстуру"
 },
 "Multi-View to Texture": {
 "ru": {
@@ -354,7 +390,8 @@ window.__HYRU_HINTS = {
 "en": {
 "d": "A texture from several views of the object.",
 "r": "Covers the sides and back most accurately."
-}
+},
+"alt": "Несколько ракурсов для текстурирования"
 },
 "Generate PBR Textures": {
 "ru": {
@@ -364,7 +401,8 @@ window.__HYRU_HINTS = {
 "en": {
 "d": "PBR is a set of maps for realistic materials: color, metallic, roughness, normals.",
 "r": "Turn it on for games and realistic rendering."
-}
+},
+"alt": "Создать PBR Текстуры"
 },
 "Albedo": {
 "ru": {
@@ -372,7 +410,8 @@ window.__HYRU_HINTS = {
 },
 "en": {
 "d": "Base surface color without lighting or shadows."
-}
+},
+"alt": "Альбедо"
 },
 "Metallic": {
 "ru": {
@@ -380,7 +419,8 @@ window.__HYRU_HINTS = {
 },
 "en": {
 "d": "Metallic map: which parts of the surface are metal."
-}
+},
+"alt": "Металличность"
 },
 "Roughness": {
 "ru": {
@@ -388,7 +428,8 @@ window.__HYRU_HINTS = {
 },
 "en": {
 "d": "Roughness map: matte (light) or glossy (dark) surface."
-}
+},
+"alt": "Шероховатость"
 },
 "Normal": {
 "ru": {
@@ -396,7 +437,8 @@ window.__HYRU_HINTS = {
 },
 "en": {
 "d": "Normal map: fine surface relief without extra polygons."
-}
+},
+"alt": "Обычный"
 },
 "Remove Baked Lighting": {
 "ru": {
@@ -406,7 +448,8 @@ window.__HYRU_HINTS = {
 "en": {
 "d": "Removes painted-in lights and shadows from the texture, leaving clean color.",
 "r": "Turn it on for games/PBR — lighting should come from the engine, not the texture."
-}
+},
+"alt": "Убрать запечённое освещение"
 },
 "Texture Resolution": {
 "ru": {
@@ -416,7 +459,8 @@ window.__HYRU_HINTS = {
 "en": {
 "d": "Texture size in pixels.",
 "r": "2K is usually enough. 4K for close-ups."
-}
+},
+"alt": "Разрешение текстур"
 },
 "Texture Map Resolution": {
 "ru": {
@@ -426,7 +470,8 @@ window.__HYRU_HINTS = {
 "en": {
 "d": "Texture size in pixels.",
 "r": "2K is usually enough. 4K for close-ups."
-}
+},
+"alt": "Разрешение карты текстур"
 },
 "Seamless Texture": {
 "ru": {
@@ -436,7 +481,8 @@ window.__HYRU_HINTS = {
 "en": {
 "d": "A seamless (tileable) texture that can repeat like tiles.",
 "r": "For floors, walls, terrain."
-}
+},
+"alt": "Бесшовная текстура"
 },
 "Rigging & Skinning": {
 "ru": {
@@ -446,7 +492,8 @@ window.__HYRU_HINTS = {
 "en": {
 "d": "Rigging adds a skeleton inside the model; skinning binds the mesh to the bones. Required for animation.",
 "r": "Works for humanoid characters. Model in T/A pose, facing forward."
-}
+},
+"alt": "Риггинг и скиннинг"
 },
 "Automatic Rigging": {
 "ru": {
@@ -456,7 +503,8 @@ window.__HYRU_HINTS = {
 "en": {
 "d": "Places bones and binds the mesh automatically.",
 "r": "Start with this; if bones are off, fix them manually."
-}
+},
+"alt": "Автоматическая такелажная установка"
 },
 "Manual Rigging": {
 "ru": {
@@ -466,7 +514,8 @@ window.__HYRU_HINTS = {
 "en": {
 "d": "Place key skeleton points (knees, elbows, etc.) by hand.",
 "r": "Use it if automatic rigging got it wrong."
-}
+},
+"alt": "Ручная установка"
 },
 "Rigging & Animation": {
 "ru": {
@@ -476,7 +525,8 @@ window.__HYRU_HINTS = {
 "en": {
 "d": "Rig plus character animation.",
 "r": "Needs a humanoid model in T/A pose."
-}
+},
+"alt": "Риггинг и анимация"
 },
 "Animation Generation": {
 "ru": {
@@ -486,7 +536,8 @@ window.__HYRU_HINTS = {
 "en": {
 "d": "Animation for a rigged model.",
 "r": "Pick a motion template or describe it with text/video."
-}
+},
+"alt": "Генерация анимации"
 },
 "3D Animation Generation": {
 "ru": {
@@ -496,7 +547,8 @@ window.__HYRU_HINTS = {
 "en": {
 "d": "Animation for a rigged model.",
 "r": "Pick a motion template or describe it with text/video."
-}
+},
+"alt": "Генерация 3D-анимации"
 },
 "Text to Motion": {
 "ru": {
@@ -506,7 +558,8 @@ window.__HYRU_HINTS = {
 "en": {
 "d": "Motion from a text description (\"walks and waves\").",
 "r": "Short, simple actions work best."
-}
+},
+"alt": "Преобразование текста в движение"
 },
 "Video to Motion": {
 "ru": {
@@ -516,7 +569,8 @@ window.__HYRU_HINTS = {
 "en": {
 "d": "Transfers motion from a video of a person to the model (video mocap).",
 "r": "Fixed camera, whole body in frame, fitted clothing."
-}
+},
+"alt": "Видео в Motion"
 },
 "Motion Templates": {
 "ru": {
@@ -524,7 +578,8 @@ window.__HYRU_HINTS = {
 },
 "en": {
 "d": "Ready-made motions: walking, running, dancing, etc."
-}
+},
+"alt": "Шаблоны движения"
 },
 "Component Split": {
 "ru": {
@@ -534,7 +589,8 @@ window.__HYRU_HINTS = {
 "en": {
 "d": "Splits the model into separate parts — wheels, arms, drawers.",
 "r": "Handy for editing, recoloring parts and animating mechanisms."
-}
+},
+"alt": "Разделение на части"
 },
 "Component Segmentation": {
 "ru": {
@@ -542,7 +598,8 @@ window.__HYRU_HINTS = {
 },
 "en": {
 "d": "Splits the model into separate parts."
-}
+},
+"alt": "Компонент разделение на части"
 },
 "Pre-Split": {
 "ru": {
@@ -552,7 +609,8 @@ window.__HYRU_HINTS = {
 "en": {
 "d": "Automatic preliminary split into parts before manual editing.",
 "r": "Click it several times — results differ."
-}
+},
+"alt": "Предварительное разделение"
 },
 "Part Mode": {
 "ru": {
@@ -560,7 +618,8 @@ window.__HYRU_HINTS = {
 },
 "en": {
 "d": "Part editing mode: clicking a face selects the whole part."
-}
+},
+"alt": "Режим детали"
 },
 "Seed": {
 "ru": {
@@ -570,7 +629,8 @@ window.__HYRU_HINTS = {
 "en": {
 "d": "A number that controls randomness. Same seed + same settings = similar result.",
 "r": "Change it to get a different variant with the same settings."
-}
+},
+"alt": "Seed"
 },
 "Style": {
 "ru": {
@@ -578,7 +638,8 @@ window.__HYRU_HINTS = {
 },
 "en": {
 "d": "Artistic style of the result."
-}
+},
+"alt": "Стиль"
 },
 "Geometry Style": {
 "ru": {
@@ -586,7 +647,8 @@ window.__HYRU_HINTS = {
 },
 "en": {
 "d": "Shape style: realistic, cartoon, low-poly, etc."
-}
+},
+"alt": "Стиль геометрии"
 },
 "Utilize symmetry": {
 "ru": {
@@ -596,7 +658,8 @@ window.__HYRU_HINTS = {
 "en": {
 "d": "Make the model symmetrical.",
 "r": "On for characters, vehicles, furniture. Off for asymmetric objects."
-}
+},
+"alt": "Использовать симметрию"
 },
 "Model Version": {
 "ru": {
@@ -606,7 +669,8 @@ window.__HYRU_HINTS = {
 "en": {
 "d": "Version of the neural network used for generation.",
 "r": "Usually the newest is best; older ones if you liked their style."
-}
+},
+"alt": "Версия модели"
 },
 "Credits": {
 "ru": {
@@ -614,7 +678,8 @@ window.__HYRU_HINTS = {
 },
 "en": {
 "d": "In-app currency charged for each generation."
-}
+},
+"alt": "Кредиты"
 },
 "Native Editing": {
 "ru": {
@@ -622,7 +687,8 @@ window.__HYRU_HINTS = {
 },
 "en": {
 "d": "Edit a finished model with text commands."
-}
+},
+"alt": "Встроенное редактирование"
 },
 "Text to Scene": {
 "ru": {
@@ -630,7 +696,8 @@ window.__HYRU_HINTS = {
 },
 "en": {
 "d": "A 3D scene/world from a text description."
-}
+},
+"alt": "Текст в сцену"
 },
 "Image to Scene": {
 "ru": {
@@ -638,7 +705,8 @@ window.__HYRU_HINTS = {
 },
 "en": {
 "d": "A 3D scene/world from an image."
-}
+},
+"alt": "Изображение в сцену"
 },
 "Panorama to Scene": {
 "ru": {
@@ -646,7 +714,8 @@ window.__HYRU_HINTS = {
 },
 "en": {
 "d": "A 3D scene from a 360° panorama."
-}
+},
+"alt": "Панорама в сцену"
 },
 "World Model": {
 "ru": {
@@ -654,7 +723,8 @@ window.__HYRU_HINTS = {
 },
 "en": {
 "d": "Generates entire walkable 3D worlds/scenes."
-}
+},
+"alt": "Мировая модель"
 },
 "Select a Format": {
 "ru": {
@@ -664,7 +734,8 @@ window.__HYRU_HINTS = {
 "en": {
 "d": "File format for download.",
 "r": "GLB — universal (Blender, web). FBX — Unity/Unreal and animation. OBJ — plain geometry. STL — 3D printing. USDZ — iPhone/AR."
-}
+},
+"alt": "Выберите формат"
 },
 "Texture Format": {
 "ru": {
@@ -674,6 +745,7 @@ window.__HYRU_HINTS = {
 "en": {
 "d": "File format for textures.",
 "r": "PNG — lossless. JPG — smaller."
-}
+},
+"alt": "Формат текстуры"
 }
 };

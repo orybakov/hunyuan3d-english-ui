@@ -100,6 +100,37 @@ def main():
     )
     print(f"exact={len(exact)} patterns={len(patterns)} -> {out}")
 
+    # Russian UI: tools/i18n_ru.json = {main: {key: ru}, studio: {key: ru}, dict: {zh: ru}, patterns: [[zh, ru]]}
+    ru_path = ROOT / "tools/i18n_ru.json"
+    ru = json.loads(ru_path.read_text("utf-8")) if ru_path.exists() else {}
+    en2ru = {}
+    out_ru = {"main": {}, "studio": {}, "exact": {}, "patterns": []}
+    for app, (fz, fe) in zip(("main", "studio"), pairs):
+        for key, rv in ru.get(app, {}).items():
+            ev = fe.get(key)
+            if isinstance(ev, str) and isinstance(rv, str) and rv.strip():
+                out_ru[app][key] = rv
+                en2ru.setdefault(ev.strip(), rv.strip())
+    for zv, rv in ru.get("dict", {}).items():
+        if zv in exact and rv.strip():
+            out_ru["exact"][zv] = rv
+            en2ru.setdefault(exact[zv], rv.strip())
+    known = {zv for zv, _ in patterns}
+    out_ru["patterns"] = [[zv, rv] for zv, rv in ru.get("patterns", []) if zv in known]
+    (ROOT / "src/i18n-ru.js").write_text(
+        "// Сгенерировано tools/build_dict.py из tools/i18n_ru.json\n"
+        "window.__HYRU_RU = " + json.dumps(out_ru, ensure_ascii=False, indent=0) + ";\n", "utf-8")
+    print("ru: " + ", ".join(f"{k}={len(v)}" for k, v in out_ru.items()))
+
+    # подсказки ищутся и по русской надписи (alt) — для русского интерфейса
+    for label, h in hints.items():
+        if en2ru.get(label):
+            h["alt"] = en2ru[label]
+    (ROOT / "src/hints-data.js").write_text(
+        "// Сгенерировано tools/build_dict.py из tools/hints_{ru,en}.json\n"
+        "window.__HYRU_HINTS = " + json.dumps(hints, ensure_ascii=False, indent=0) + ";\n", "utf-8")
+    print(f"hints={len(hints)} with ru label={sum('alt' in h for h in hints.values())}")
+
 
 if __name__ == "__main__":
     main()

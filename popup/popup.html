@@ -6,23 +6,49 @@
 </head>
 <body>
   <header>
-    <h1>Hunyuan 3D accounts</h1>
-    <button id="refresh" class="ghost" title="Check remaining generations of all accounts">↻ Check all</button>
+    <h1>Hunyuan 3D</h1>
+    <button id="openLib" class="ghost" data-t="library" hidden>Library</button>
+    <button id="gear" class="ghost icon-btn" data-t-title="settings" title="Settings">⚙</button>
   </header>
-  <section id="access" hidden>
-    <p>The extension needs access to <b>tencent.com</b> cookies (where the site keeps your login) to save and switch logins
-    (Chrome's “Site access” is limited for this extension).</p>
-    <button id="grant">Allow access</button>
+
+  <div id="main">
+    <section id="accountsBox">
+      <div class="row">
+        <h2 data-t="accounts">Accounts</h2>
+        <button id="refresh" class="ghost small" data-t="checkAll" data-t-title="checkAllTitle">↻ Check all</button>
+      </div>
+      <section id="access" hidden>
+        <p data-t="accessText">The account switcher needs access to tencent.com cookies (that's where the site keeps your login).</p>
+        <button id="grant" data-t="allow">Allow access</button>
+      </section>
+      <section id="current"></section>
+      <ul id="list"></ul>
+      <p id="empty" hidden data-t="empty">No saved accounts yet. Log in on the site, then click Save current.</p>
+      <button id="next" class="wide" hidden></button>
+      <footer>
+        <button id="save" data-t="save">Save current</button>
+        <button id="add" class="ghost" data-t="add" data-t-title="addTitle">+ Add another</button>
+      </footer>
+      <div id="ask"></div>
+    </section>
+
+    <section id="tools">
+      <button id="report" class="ghost wide" data-t="report" hidden>Report untranslated text</button>
+    </section>
+  </div>
+
+  <section id="settings" hidden>
+    <h2 data-t="settings">Settings</h2>
+    <label class="opt"><span data-t="uiLang">Site language</span>
+      <select id="uiLang"><option value="en">English</option><option value="ru">Русский</option></select>
+    </label>
+    <p class="note" data-t="alwaysOn">Translation is always on. Everything below can be switched off.</p>
+    <div id="toggles"></div>
+    <button id="back" class="wide" data-t="done">Done</button>
   </section>
-  <section id="current"></section>
-  <ul id="list"></ul>
-  <p id="empty" hidden>No saved accounts yet. Log in on the site, then click <b>Save current</b>.</p>
-  <footer>
-    <button id="save">Save current</button>
-    <button id="add" class="ghost" title="Save the current login and sign out, so you can log in to another account">+ Add another</button>
-  </footer>
-  <div id="ask"></div>
+
   <p id="msg" role="status"></p>
+  <script src="../src/defaults.js"></script>
   <script src="popup.js"></script>
 </body>
 </html>

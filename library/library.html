@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Hunyuan 3D — model library</title>
+  <link rel="icon" href="../icons/icon32.png" />
+  <link rel="stylesheet" href="library.css" />
+</head>
+<body>
+  <header>
+    <h1 data-t="title">Model library</h1>
+    <span id="count"></span>
+    <div class="filters">
+      <input id="q" type="search" data-t-ph="search" placeholder="Search" />
+      <select id="acc"></select>
+      <select id="kind">
+        <option value="" data-t="allKinds">All</option>
+        <option value="studio">Studio</option>
+        <option value="classic" data-t="classic">Classic generator</option>
+      </select>
+      <button id="reload" class="ghost" data-t="reload">↻ Reload</button>
+    </div>
+  </header>
+  <div id="bulk">
+    <label><input type="checkbox" id="all" /> <span data-t="selectAll">Select all shown</span></label>
+    <span data-t="format">Format:</span>
+    <select id="fmt"></select>
+    <button id="dl" disabled></button>
+    <span id="status"></span>
+  </div>
+  <p id="errors" hidden></p>
+  <main id="grid"></main>
+  <script src="../src/defaults.js"></script>
+  <script src="library.js"></script>
+</body>
+</html>

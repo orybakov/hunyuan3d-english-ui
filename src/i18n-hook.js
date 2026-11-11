@@ -5,6 +5,8 @@
   const CJK = /[\u4e00-\u9fff]/;
   const diag = (window.__HYRU_HOOK = { installedAt: performance.now(), seen: [], forcedLng: null, overrides: 0 });
   const OV = window.__HYRU_OVERRIDES || {};
+  // Russian UI: Russian strings go on top of the (polished) English ones; untranslated keys stay English.
+  const RU = window.__HYRU_LANG === "ru" ? window.__HYRU_RU || null : null;
 
   // Правки английских текстов (tools/overrides_en.json) по пути ключа "a.b.c"
   const applyOverrides = (root, map) => {
@@ -49,6 +51,7 @@
       if (zh && en) {
         deepAssign(zh, en);
         applyOverrides(zh, OV.main);
+        if (RU) applyOverrides(zh, RU.main);
         window.__HYRU_BUNDLE_PATCHED = true;
       }
     }
@@ -76,7 +79,10 @@
             if (enKey) {
               this.lng = enKey;
               const t = res[enKey] && res[enKey].translation;
-              if (t && typeof t === "object") applyOverrides(t, OV.studio);
+              if (t && typeof t === "object") {
+                applyOverrides(t, OV.studio);
+                if (RU) applyOverrides(t, RU.studio);
+              }
               diag.forcedLng = enKey;
               window.__HYRU_BUNDLE_PATCHED = true;
               restore();

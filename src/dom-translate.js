@@ -5,15 +5,18 @@
   const D = window.__HYRU_DICT;
   if (!D) return;
 
-  const TARGET = "en";
+  const RU = window.__HYRU_LANG === "ru" ? window.__HYRU_RU || null : null;
+  const TARGET = RU ? "ru" : "en";
   const CJK = /[\u4e00-\u9fff]/;
   const ATTRS = ["placeholder", "title", "aria-label", "alt"];
   const SKIP_TAGS = new Set(["SCRIPT", "STYLE", "NOSCRIPT", "TEXTAREA", "CODE", "PRE"]);
   const CACHE_KEY = "hyru_mt_" + TARGET;
 
-  const exact = new Map(Object.entries(D.exact));
+  // Russian mode: Russian where translated, English otherwise
+  const exact = new Map(Object.entries(RU ? { ...D.exact, ...RU.exact } : D.exact));
   const esc = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-  const patterns = D.patterns.map(([zh, en]) => {
+  const ruPat = new Map(RU ? RU.patterns : []);
+  const patterns = D.patterns.map(([zh, en]) => [zh, ruPat.get(zh) || en]).map(([zh, en]) => {
     const names = [];
     const src = zh
       .split(/(\{\{\s*\w+\s*\}\})/)

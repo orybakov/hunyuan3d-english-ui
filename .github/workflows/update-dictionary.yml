@@ -1,0 +1,37 @@
+# Weekly: rebuild the dictionary from the live site bundle and open a PR if Tencent changed any texts.
+name: Update dictionary
+
+on:
+  schedule:
+    - cron: "17 3 * * 1" # Mondays 03:17 UTC
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Rebuild dictionary from the site
+        run: python3 tools/build_dict.py
+      - name: Summary
+        run: git diff --stat -- src/ | tee -a "$GITHUB_STEP_SUMMARY"
+      - uses: peter-evans/create-pull-request@v7
+        with:
+          branch: auto/update-dictionary
+          commit-message: "Dictionary: rebuild from the current site bundle"
+          title: "Dictionary: the site changed its texts"
+          body: |
+            Automatic weekly rebuild (`python3 tools/build_dict.py`) found changes in the site's strings.
+            Check new untranslated keys for the Russian UI (`tools/i18n_ru.json`) and wording (`tools/overrides_en.json`).
+          add-paths: src/
+          delete-branch: true

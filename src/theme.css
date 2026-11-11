@@ -94,3 +94,128 @@ html.hyru-hints-off [data-hyru-hint] {
   margin-top: 6px;
   color: #7fb4ff;
 }
+
+/* ---------- Prompt tools (src/features.js) ---------- */
+#hyru-bar,
+#hyru-menu,
+#hyru-banner {
+  font: 500 12px/1.3 "HYRU Inter", -apple-system, "Segoe UI", Roboto, sans-serif;
+  color: rgba(255, 255, 255, 0.88);
+}
+#hyru-bar {
+  position: fixed;
+  z-index: 2147483000;
+  display: flex;
+  gap: 4px;
+}
+#hyru-bar[hidden],
+#hyru-bar button[hidden] {
+  display: none;
+}
+#hyru-bar button,
+#hyru-banner button,
+#hyru-menu button {
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 6px;
+  padding: 3px 8px;
+  background: rgba(36, 38, 46, 0.92);
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+  white-space: nowrap;
+}
+#hyru-bar button:hover,
+#hyru-menu button:hover {
+  border-color: #4d7cff;
+  color: #fff;
+}
+#hyru-bar button:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+#hyru-menu {
+  position: fixed;
+  z-index: 2147483001;
+  width: 280px;
+  max-height: 60vh;
+  overflow: auto;
+  padding: 6px;
+  border-radius: 10px;
+  background: rgba(24, 25, 30, 0.97);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+}
+#hyru-menu .hyru-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 8px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+#hyru-menu .hyru-item span {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+#hyru-menu .hyru-item:hover {
+  background: rgba(77, 124, 255, 0.18);
+}
+#hyru-menu .hyru-item button {
+  border: 0;
+  background: none;
+  padding: 0 4px;
+  color: rgba(255, 255, 255, 0.45);
+}
+#hyru-menu hr {
+  border: 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  margin: 4px 0;
+}
+#hyru-menu .hyru-save {
+  display: flex;
+  gap: 4px;
+  padding: 2px;
+}
+#hyru-menu .hyru-save input {
+  flex: 1;
+  min-width: 0;
+  padding: 4px 6px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 6px;
+  background: rgba(0, 0, 0, 0.3);
+  color: inherit;
+  font: inherit;
+}
+
+/* ---------- "No generations left" banner ---------- */
+#hyru-banner {
+  position: fixed;
+  z-index: 2147483002;
+  top: 72px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  max-width: min(720px, calc(100vw - 32px));
+  padding: 10px 12px 10px 16px;
+  border-radius: 12px;
+  background: rgba(24, 25, 30, 0.96);
+  border: 1px solid #c9792b;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+  font-size: 13px;
+}
+#hyru-banner button {
+  background: #4d7cff;
+  border-color: #4d7cff;
+  color: #fff;
+  padding: 5px 12px;
+}
+#hyru-banner button.hyru-x {
+  background: none;
+  border: 0;
+  color: rgba(255, 255, 255, 0.5);
+  padding: 2px 4px;
+}
