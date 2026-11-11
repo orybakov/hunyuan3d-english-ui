@@ -3,6 +3,8 @@
 
 const ORIGIN = "https://3d.hunyuan.tencent.com";
 const SITE = ORIGIN + "/";
+// Login cookies live on .tencent.com without Secure: reading/restoring them needs http+https access to *.tencent.com.
+const ACCESS = ["https://*.tencent.com/*", "http://*.tencent.com/*"];
 const HEADERS = { "x-source": "web", "x-product": "hunyuan3d", "Content-Type": "application/json" };
 
 const load = async () => {
@@ -137,7 +139,7 @@ async function cookieDiag() {
     }
   }
   try {
-    const perm = await chrome.permissions.contains({ origins: [SITE + "*"] });
+    const perm = await chrome.permissions.contains({ origins: ACCESS });
     parts.push(`hostPerm=${perm}`);
   } catch {}
   return parts.join(", ") + "; related: " + (related.join(", ") || "none");

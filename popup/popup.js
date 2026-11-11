@@ -4,6 +4,19 @@ const msg = (text, err) => {
   $("#msg").className = err ? "err" : "";
 };
 
+const ACCESS = { origins: ["https://*.tencent.com/*", "http://*.tencent.com/*"] };
+const hasAccess = () => chrome.permissions.contains(ACCESS);
+
+// Must run inside a click handler: permissions.request needs a user gesture.
+async function ensureAccess() {
+  const ok = await chrome.permissions.request(ACCESS); // resolves true without a prompt if already granted
+  if (!ok) msg("Access not granted — saving and switching accounts won't work.", true);
+  return ok;
+}
+const guarded = (fn) => async (...a) => {
+  if (await ensureAccess()) return fn(...a);
+};
+
 async function call(type, data = {}) {
   const r = await chrome.runtime.sendMessage({ type, ...data });
   if (!r || !r.ok) throw new Error((r && r.error) || "No response");
@@ -47,6 +60,7 @@ function quotaEl(q) {
 }
 
 async function render() {
+  $("#access").hidden = await hasAccess();
   let st;
   try {
     st = await call("state");
@@ -119,7 +133,7 @@ async function render() {
     li.append(name, quotaEl(a.quota), ren, del);
     if (!active) {
       li.title = "Switch to this account";
-      li.onclick = () => busy(`Switching to ${a.name}…`, () => call("switch", { id: a.id }));
+      li.onclick = guarded(() => busy(`Switching to ${a.name}…`, () => call("switch", { id: a.id })));
     }
     list.append(li);
   }
@@ -161,7 +175,7 @@ function nameForm(value, placeholder, onOk, onCancel) {
   return f;
 }
 
-$("#save").onclick = () => {
+$("#save").onclick = guarded(() => {
   const box = $("#ask");
   box.textContent = "";
   box.append(
@@ -170,12 +184,15 @@ $("#save").onclick = () => {
       busy("Saving…", () => call("save", { name: n }));
     }, () => (box.textContent = ""))
   );
-};
-$("#add").onclick = () =>
+});
+$("#add").onclick = guarded(() =>
   busy("Signing out…", async () => {
     await call("addNew");
     return "Log in to another account on the site, then open this popup and click Save current.";
-  });
-$("#refresh").onclick = () => busy("Checking all accounts…", () => call("refreshAll"));
+  }));
+$("#refresh").onclick = guarded(() => busy("Checking all accounts…", () => call("refreshAll")));
+$("#grant").onclick = async () => {
+  if (await ensureAccess()) render();
+};
 
 render();
