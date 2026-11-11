@@ -1,10 +1,13 @@
-# Hunyuan 3D — English UI & Hints
+# Hunyuan 3D in English — Chrome extension (English UI & tooltips)
 
-**English** · [Русский](#русский)
+**English** · [Русский](#русский) · [Website](https://orybakov.github.io/hunyuan3d-english-ui/) · [Download](../../releases/latest)
 
-An unofficial Chrome extension for [Tencent Hunyuan 3D](https://3d.hunyuan.tencent.com) (`3d.hunyuan.tencent.com`).
-The Chinese site is the one that actually works from most regions, but its interface is Chinese-only.
-This extension switches it to English, cleans up the wording and adds tooltips that explain 3D terms.
+Free, unofficial Chrome extension for [Tencent Hunyuan 3D](https://3d.hunyuan.tencent.com) (`3d.hunyuan.tencent.com`, Tencent HY 3D).
+The Chinese site has no language switch, and `?lang=en` doesn't work. This extension translates the **whole
+interface into English**, Studio included, fixes Tencent's awkward wording and adds tooltips that explain 3D settings.
+**Hunyuan 3D на английском, с подсказками на русском**: see [Русский](#русский).
+
+![Hunyuan 3D: Chinese original vs English with the extension](docs/before-after.png)
 
 ![Tooltip demo](docs/hint.png)
 <sub>Tooltip demo (test button on the login page): English and Russian. Inside the app, tooltips appear on real buttons and settings.</sub>
@@ -77,7 +80,7 @@ Code: [MIT](LICENSE). Font: [Inter](https://rsms.me/inter/), SIL Open Font Licen
 
 ## Русский
 
-Неофициальное расширение Chrome для [Tencent Hunyuan 3D](https://3d.hunyuan.tencent.com).
+**Hunyuan 3D на английском, с подсказками на русском.** Бесплатное неофициальное расширение Chrome для [Tencent Hunyuan 3D](https://3d.hunyuan.tencent.com).
 Китайский сайт — тот, что реально открывается из России, но интерфейс у него только на китайском.
 Расширение переводит его на английский, исправляет кривые формулировки и добавляет подсказки к 3D-терминам на русском (или английском).
 
