@@ -718,7 +718,6 @@ window.__HYRU_DICT = {
 "基于指令或视频输入自动生成3D动画序列": "Generate 3D animation from a prompt or video.",
 "暂无相关案例": "No matching cases yet",
 "全部节点": "All Nodes",
-"几何高模": "High-Poly Geometry",
 "组件分割": "Component Split",
 "低模拓扑": "Low-Poly Topology",
 "纹理贴图": "Texture Generation",
