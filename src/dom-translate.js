@@ -247,14 +247,24 @@
       }
       // Модель надо скачать — Chrome требует жест пользователя.
       mtState = "need-click";
-      const onGesture = () => {
-        create().catch((e) => console.warn("[hyru] Translator.create:", e));
+      // One attempt per gesture (pointerdown + keydown used to start two downloads); on failure wait for the next one.
+      let busy = false;
+      const onGesture = (e) => {
+        if (busy || !e.isTrusted) return;
+        busy = true;
+        create()
+          .then(() => {
+            window.removeEventListener("pointerdown", onGesture, true);
+            window.removeEventListener("keydown", onGesture, true);
+          })
+          .catch((err) => console.debug("[hyru] Translator.create, will retry on the next click:", err))
+          .finally(() => (busy = false));
       };
-      window.addEventListener("pointerdown", onGesture, { once: true, capture: true });
-      window.addEventListener("keydown", onGesture, { once: true, capture: true });
+      window.addEventListener("pointerdown", onGesture, true);
+      window.addEventListener("keydown", onGesture, true);
     } catch (e) {
       mtState = "unavailable";
-      console.warn("[hyru] Translator API:", e);
+      console.debug("[hyru] Translator API:", e);
     }
   }
   initMT();
