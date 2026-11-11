@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "Hunyuan 3D — English UI & Hints",
-  "version": "0.3.0",
-  "description": "Unofficial: switches 3d.hunyuan.tencent.com to English, polishes the wording and adds tooltips for 3D terms.",
+  "name": "Hunyuan 3D — English UI, Hints & Accounts",
+  "version": "0.4.0",
+  "description": "Unofficial: switches 3d.hunyuan.tencent.com to English, adds tooltips for 3D terms and one-click switching between your accounts.",
   "content_scripts": [
     {
       "matches": [
@@ -40,5 +40,22 @@
         "https://3d.hunyuan.tencent.com/*"
       ]
     }
-  ]
+  ],
+  "permissions": [
+    "cookies",
+    "storage",
+    "scripting",
+    "tabs"
+  ],
+  "host_permissions": [
+    "https://*.tencent.com/*",
+    "http://*.tencent.com/*"
+  ],
+  "background": {
+    "service_worker": "src/background.js"
+  },
+  "action": {
+    "default_popup": "popup/popup.html",
+    "default_title": "Hunyuan 3D accounts"
+  }
 }

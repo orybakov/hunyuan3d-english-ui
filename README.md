@@ -29,6 +29,8 @@ interface into English**, Studio included, fixes Tencent's awkward wording and a
   language. **Alt+H** — show/hide tooltips, **Alt+L** — switch tooltip language.
 - **Neater look, same design.** Inter font for Latin/Cyrillic (the site expects *PingFang SC*, missing on
   Windows/Linux), no words broken mid-line, thin dark scrollbars, full text on hover for truncated labels.
+- **Account switcher.** Have several accounts for more free generations? Save them once and switch in one
+  click from the toolbar button; each account shows how many generations it has left today. See [Accounts](#accounts).
 - Text you type (prompts, inputs) is never touched.
 
 ## Install
@@ -41,6 +43,23 @@ interface into English**, Studio included, fixes Tencent's awkward wording and a
 Works in Chrome and other Chromium browsers (Edge, Brave, Yandex Browser). The fallback machine translator
 needs Chrome's Translator API (Chrome 138+); it downloads a language model after your first click on the page.
 Without it, everything else still works.
+
+## Accounts
+
+Click the extension's toolbar button (pin it via the puzzle icon):
+
+1. Log in on the site and click **Save current** (give it a name, or leave empty).
+2. Click **+ Add another**: the current login is kept and you're signed out on the site. Log in to the next account and **Save current** again.
+3. Click any account in the list to switch to it. Open site tabs reload already logged in.
+4. **↻ Check all** checks the remaining generations of every account and returns you to the current one.
+
+Don't press **Sign Out** on the site for an account you want to keep: that ends the saved session on the server.
+If an account shows *expired*, log in to it again and click **Save current**.
+
+**Security:** a saved account is a copy of the site's login cookies, stored only in `chrome.storage.local` of your
+browser profile and never sent anywhere except to Tencent's own site. Anyone with access to your browser profile
+could use them. That's also why the extension asks for access to cookies of `*.tencent.com`
+(the login cookies are set without the `Secure` flag, so it needs both `http://` and `https://` access).
 
 ## Troubleshooting
 
@@ -56,6 +75,7 @@ Open DevTools (F12) → Console (context **top**):
 |---|---|
 | `src/i18n-hook.js` | Main app: intercepts `JSON.parse` of the i18n bundles and copies English values into the Chinese bundle. Studio: forces `lng: "en"` in `i18next.init` via a short-lived `defaultNS` getter. Applies `overrides.js`. |
 | `src/dom-translate.js` | MutationObserver-based translation of remaining text and attributes: dictionary → `{{placeholder}}` patterns → Chrome Translator API with a localStorage cache. |
+| `src/background.js`, `popup/` | Account switcher: cookie snapshots per account, quota from `/api/3d/quotainfo`. |
 | `src/hints.js`, `src/theme.css` | Tooltips (texts in `tools/hints_en.json`, `tools/hints_ru.json`), Alt+H / Alt+L, titles for truncated labels; font and small style fixes. |
 | `tools/build_dict.py` | Rebuilds `src/dict.js`, `src/overrides.js`, `src/hints-data.js` from the live site plus `tools/*.json`. |
 | `tools/smoke.mjs` | Headless Chrome smoke test via CDP, injects scripts the same way the extension does. |
@@ -91,6 +111,7 @@ Code: [MIT](LICENSE). Font: [Inter](https://rsms.me/inter/), SIL Open Font Licen
 - **Остатки** — словарь на ~1900 строк, а что не нашлось — встроенный в Chrome офлайн-переводчик (ничего не уходит на сторонние серверы).
 - **Подсказки на русском и английском** к ~70 терминам: полигоны, ретопология, quads/triangles, запекание нормалей, UV, PBR, риг, анимация, разделение на части, seed, форматы экспорта — что это и что выбирать. Язык берётся из языка браузера. Термины с подсказкой подчёркнуты пунктиром. **Alt+H** — вкл/выкл, **Alt+L** — сменить язык подсказок.
 - **Аккуратнее, дизайн тот же** — шрифт Inter, слова не рвутся посередине, тонкие скроллбары, полный текст у обрезанных надписей.
+- **Переключатель аккаунтов** — если у вас несколько аккаунтов ради бесплатных генераций: сохраните их один раз и переключайтесь в один клик кнопкой расширения на панели. У каждого виден остаток генераций на сегодня.
 - Поля ввода (промпты) не трогает.
 
 ### Установка
@@ -101,6 +122,17 @@ Code: [MIT](LICENSE). Font: [Inter](https://rsms.me/inter/), SIL Open Font Licen
 4. Открыть или обновить https://3d.hunyuan.tencent.com.
 
 Подходит для Chrome, Edge, Brave, Яндекс Браузера. Офлайн-переводчику нужен Chrome 138+, модель он скачает после первого клика по странице; без него остальное работает.
+
+### Аккаунты
+
+Кнопка расширения на панели (закрепите через значок пазла):
+
+1. Войдите на сайте → **Save current** (имя можно не вводить).
+2. **+ Add another** — текущий вход сохранится, на сайте вы выйдете. Войдите в следующий аккаунт → **Save current**.
+3. Клик по аккаунту — переключение, вкладки сайта перезагрузятся уже под ним.
+4. **↻ Check all** — проверить остаток генераций у всех.
+
+Не нажимайте на сайте «Sign Out» у аккаунта, который хотите оставить. Сохранённые входы — это копии cookie сайта, они хранятся только в вашем профиле браузера. Поэтому расширение и просит доступ к cookie `*.tencent.com`.
 
 ### Если что-то не переведено
 

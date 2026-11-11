@@ -110,17 +110,6 @@ async function getCookies() {
   return [...seen.values()];
 }
 
-// Diagnostics: which cookie names the browser actually sends to the site API.
-let sentCookieNames = "not captured yet";
-chrome.webRequest.onBeforeSendHeaders.addListener(
-  (d) => {
-    const h = (d.requestHeaders || []).find((x) => x.name.toLowerCase() === "cookie");
-    sentCookieNames = h ? h.value.split(/;\s*/).map((kv) => kv.split("=")[0]).join(", ") : "no Cookie header";
-  },
-  { urls: [ORIGIN + "/api/*"] },
-  ["requestHeaders", "extraHeaders"]
-);
-
 async function cookieDiag() {
   const parts = [];
   for (const [label, q] of [["url", { url: SITE }], ["domain", { domain: "tencent.com" }], ["all-partitions", { url: SITE, partitionKey: {} }]]) {
@@ -151,7 +140,6 @@ async function cookieDiag() {
     const perm = await chrome.permissions.contains({ origins: [SITE + "*"] });
     parts.push(`hostPerm=${perm}`);
   } catch {}
-  parts.push(`sent: ${sentCookieNames}`);
   return parts.join(", ") + "; related: " + (related.join(", ") || "none");
 }
 
