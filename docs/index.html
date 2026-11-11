@@ -4,13 +4,13 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="google-site-verification" content="ijPxIOyTT_gf1ww2jiaKPVF7a8rHkAhlta0YE-Xgt1Y">
-<title>Hunyuan 3D in English (and Russian hints) — free Chrome extension</title>
-<meta name="description" content="Use Tencent Hunyuan 3D (3d.hunyuan.tencent.com) in English. Free Chrome extension: translates the whole Chinese interface, Studio included, and explains 3D settings. Hunyuan 3D на английском с подсказками на русском.">
-<meta name="keywords" content="Hunyuan 3D English, Hunyuan 3D translate, Hunyuan 3D Chinese interface, 3d.hunyuan.tencent.com English, Hunyuan 3D Studio English, Tencent HY 3D, Hunyuan 3D на русском, Hunyuan 3D перевод, Hunyuan 3D на английском, Chrome extension">
+<title>Hunyuan 3D in English or Russian — free Chrome extension (UI translation, accounts, model library)</title>
+<meta name="description" content="Use Tencent Hunyuan 3D (3d.hunyuan.tencent.com) in English or Russian. Free Chrome extension: translates the whole Chinese interface, Studio included, explains 3D settings, switches accounts, translates prompts and collects all your models. Hunyuan 3D на русском и английском.">
+<meta name="keywords" content="Hunyuan 3D English, Hunyuan 3D translate, Hunyuan 3D Chinese interface, 3d.hunyuan.tencent.com English, Hunyuan 3D Studio English, Tencent HY 3D, Hunyuan 3D на русском, Hunyuan 3D русский интерфейс, Hunyuan 3D несколько аккаунтов, Hunyuan 3D account switcher, Hunyuan 3D перевод, Hunyuan 3D на английском, Chrome extension">
 <link rel="canonical" href="https://orybakov.github.io/hunyuan3d-english-ui/">
 <meta property="og:type" content="website">
-<meta property="og:title" content="Hunyuan 3D in English — free Chrome extension">
-<meta property="og:description" content="Translates the Chinese Hunyuan 3D interface to English and explains 3D settings. Подсказки на русском.">
+<meta property="og:title" content="Hunyuan 3D in English or Russian — free Chrome extension">
+<meta property="og:description" content="Translates the Chinese Hunyuan 3D interface to English or Russian, explains 3D settings, switches accounts. Интерфейс на русском.">
 <meta property="og:url" content="https://orybakov.github.io/hunyuan3d-english-ui/">
 <meta property="og:image" content="https://orybakov.github.io/hunyuan3d-english-ui/before-after.png">
 <meta name="twitter:card" content="summary_large_image">
@@ -18,11 +18,12 @@
 {
   "@context": "https://schema.org",
   "@type": "SoftwareApplication",
-  "name": "Hunyuan 3D — English UI & Hints",
+  "name": "Hunyuan 3D — English UI, Hints & Accounts",
+  "softwareVersion": "0.5.0",
   "applicationCategory": "BrowserApplication",
   "operatingSystem": "Chrome, Edge, Brave, Yandex Browser",
   "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
-  "description": "Unofficial Chrome extension that switches the Tencent Hunyuan 3D website (3d.hunyuan.tencent.com) from Chinese to English, polishes the wording and adds English/Russian tooltips for 3D terms.",
+  "description": "Unofficial Chrome extension that switches the Tencent Hunyuan 3D website (3d.hunyuan.tencent.com) from Chinese to English or Russian, polishes the wording, adds English/Russian tooltips for 3D terms, an account switcher, prompt translation and a model library.",
   "inLanguage": ["en", "ru"],
   "license": "https://opensource.org/licenses/MIT",
   "downloadUrl": "https://github.com/orybakov/hunyuan3d-english-ui/releases/latest",
@@ -62,7 +63,8 @@
   <p><a href="#ru">Русский ↓</a></p>
   <h1>Use <span>Hunyuan 3D</span> in English</h1>
   <p class="lead">A free Chrome extension that translates the Chinese interface of Tencent Hunyuan 3D
-  (<code>3d.hunyuan.tencent.com</code>) into English, including the Studio, and explains every 3D setting in a tooltip.</p>
+  (<code>3d.hunyuan.tencent.com</code>) into English or Russian, including the Studio, explains every 3D setting in a tooltip,
+  and makes life with several accounts easy.</p>
   <div class="cta">
     <a class="btn" href="https://github.com/orybakov/hunyuan3d-english-ui/releases/latest">Download (free)</a>
     <a class="btn ghost" href="https://github.com/orybakov/hunyuan3d-english-ui">Source on GitHub</a>
@@ -77,7 +79,11 @@
     <div class="card"><h3>The whole site in English</h3><p>Main site, generators and the Studio (topology, texturing, rigging, animation, component split). No Chinese flashing on load.</p></div>
     <div class="card"><h3>Readable English</h3><p>About 620 fixes of Tencent's own translation: "Degreasing treatment" becomes "Remove Baked Lighting", "Bone Binding" becomes "Rigging &amp; Skinning".</p></div>
     <div class="card"><h3>Tooltips for 3D terms</h3><p>Face count, retopology, quads vs triangles, baked normals, UV, PBR, rigging, seed, export formats: what each one means and what to pick. In English or Russian.</p></div>
-    <div class="card"><h3>Private</h3><p>Leftover text goes through Chrome's built-in on-device translator. Nothing is sent to third-party servers. Open source, MIT license.</p></div>
+    <div class="card"><h3>Account switcher</h3><p>Save several logins and switch in one click. The toolbar icon shows generations left today across all accounts; when one runs out, the site offers the next.</p></div>
+    <div class="card"><h3>Prompt tools</h3><p>Write a prompt in Russian and turn it into English or Chinese with one button (on-device translator). Prompt templates: presets and your own.</p></div>
+    <div class="card"><h3>Model library</h3><p>Every model from every account on one page. Download one or a batch, with readable file names instead of random hashes.</p></div>
+    <div class="card"><h3>Russian interface</h3><p>Prefer Russian? Switch the whole site to Russian in the extension's settings. Every extra feature can be turned off there too.</p></div>
+    <div class="card"><h3>Private</h3><p>Leftover text goes through Chrome's built-in on-device translator. Logins stay in your browser. Nothing is sent to third-party servers. Open source, MIT license.</p></div>
   </div>
 
   <h2>Install in 1 minute</h2>
@@ -96,21 +102,28 @@
     <p>The global version is blocked in some regions and on VPN/hosting IPs. The Chinese site at 3d.hunyuan.tencent.com works from more places, and the extension makes it usable without knowing Chinese.</p></details>
   <details><summary>Is it official?</summary>
     <p>No. It is an independent open-source project, not affiliated with Tencent.</p></details>
+  <details><summary>Can I use several Hunyuan 3D accounts?</summary>
+    <p>Yes. Save each login once in the extension's popup and switch with a click. The extension checks how many generations each account has left (without logging you out) and shows the total on its icon.</p></details>
+  <details><summary>Why isn't it in the Chrome Web Store?</summary>
+    <p>It's a small free project; installing the zip takes a minute. Updates: download the new zip, replace the folder and press ↻ on the extension.</p></details>
 
   <hr>
 
   <section id="ru" lang="ru">
-    <h1>Hunyuan 3D <span>на английском</span> с подсказками на русском</h1>
-    <p class="lead">Бесплатное расширение для Chrome. Переводит китайский интерфейс Tencent Hunyuan 3D (<code>3d.hunyuan.tencent.com</code>) на английский, включая Studio, и объясняет на русском каждую 3D-настройку: что это и что выбрать.</p>
+    <h1>Hunyuan 3D <span>на русском</span> и английском</h1>
+    <p class="lead">Бесплатное расширение для Chrome. Переводит китайский интерфейс Tencent Hunyuan 3D (<code>3d.hunyuan.tencent.com</code>) на русский или английский, включая Studio, объясняет каждую 3D-настройку и упрощает работу с несколькими аккаунтами.</p>
     <div class="cta">
       <a class="btn" href="https://github.com/orybakov/hunyuan3d-english-ui/releases/latest">Скачать бесплатно</a>
       <a class="btn ghost" href="https://github.com/orybakov/hunyuan3d-english-ui#русский">Инструкция на GitHub</a>
     </div>
     <ul>
-      <li><b>Весь сайт на английском:</b> генерация по тексту и картинке, Studio, ретопология, текстуры, риг, анимация, разделение на части.</li>
+      <li><b>Весь сайт на русском или английском</b> (язык выбирается в настройках расширения): генерация по тексту и картинке, Studio, ретопология, текстуры, риг, анимация, разделение на части.</li>
       <li><b>Подсказки на русском</b> к 70 терминам: полигоны, quads/triangles, запекание нормалей, UV-развёртка, PBR, риг, seed, форматы экспорта.</li>
       <li><b>Нормальный английский</b> вместо машинного перевода Tencent: около 620 исправлений.</li>
-      <li>Ничего не отправляет на сторонние серверы. Открытый код, лицензия MIT.</li>
+      <li><b>Несколько аккаунтов:</b> сохраните входы и переключайтесь в один клик. На значке — сколько генераций осталось на всех аккаунтах; когда на одном кончились, сайт предложит следующий.</li>
+      <li><b>Промпты:</b> пишите по-русски — кнопка переведёт на английский или китайский (офлайн-переводчик Chrome). Шаблоны промптов.</li>
+      <li><b>Библиотека моделей:</b> все модели со всех аккаунтов на одной странице, скачивание пачкой с понятными именами файлов.</li>
+      <li>Всё, кроме перевода, отключается в настройках. Входы хранятся только в браузере, на сторонние серверы ничего не уходит. Открытый код, лицензия MIT.</li>
     </ul>
     <h2>Установка</h2>
     <ol>
@@ -121,7 +134,9 @@
     </ol>
     <p>Работает в Chrome, Edge, Brave и Яндекс Браузере.</p>
     <details><summary>Как перевести Hunyuan 3D на русский или английский?</summary>
-      <p>Переключателя языка на китайском сайте нет. Параметр <code>?lang=en</code> тоже не помогает. Расширение включает встроенный английский перевод Tencent и добавляет к терминам подсказки на русском.</p></details>
+      <p>Переключателя языка на китайском сайте нет. Параметр <code>?lang=en</code> тоже не помогает. Расширение включает встроенный английский перевод Tencent, а по желанию — русский интерфейс (кнопка расширения → ⚙ → Язык сайта).</p></details>
+    <details><summary>Можно ли пользоваться несколькими аккаунтами?</summary>
+      <p>Да. Сохраните каждый вход в окне расширения и переключайтесь кликом. Остаток генераций проверяется у всех аккаунтов в фоне, без выхода из текущего. Лимиты обновляются в 19:00 МСК.</p></details>
     <details><summary>Почему не международная версия?</summary>
       <p>Глобальная версия Hunyuan 3D не открывается из России и с адресов VPN. Китайская работает, а с расширением ей можно пользоваться без знания китайского.</p></details>
   </section>
