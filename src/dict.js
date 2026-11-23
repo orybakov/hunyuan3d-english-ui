@@ -758,6 +758,7 @@ window.__HYRU_DICT = {
 "编辑模式": "Edit Mode",
 "批量删除": "Batch Delete",
 "暂无资产，快去生成试试吧": "No assets yet. Generate one to get started.",
+"暂无概念设计图，快去生成试试吧": "No concept images yet, go generate some",
 "批量操作": "Batch actions",
 "资产删除后将无法恢复，确认删除吗？": "This asset can’t be restored after deletion. Delete it?",
 "禁止重复生成": "Duplicate generation is not allowed",
@@ -1045,8 +1046,8 @@ window.__HYRU_DICT = {
 "v2.5版本-提升布线质量，细节保持能力更强，稳定性提升，支持精确面数控制": "v2.5 - improved topology, better detail preservation and stability, precise face count control",
 "v3.0版本-新一代低模模型，布线质量与细节保持进一步提升，支持精确面数控制": "v3.0 - next-gen low-poly model: better topology and detail preservation, precise face count control",
 "高质全能": "High Quality, All-Purpose",
+"Flash V3.0版本-基于3.0的极速低模模型，生成更快，支持精确面数控制": "Flash V3.0 – Ultra-fast low-poly model built on V3.0, with faster generation and precise face count control.",
 "生成效果提示": "Generation Result Tips",
-"低模拓扑 - V3.0暂不支持分Part拓扑，重拓扑后会输出一体化的低模Mesh。若希望模型保留Part请使用低模拓扑 - V2.5": "Low-Poly Retopology – The \"V3.0\" mode does not support retopology that preserves individual parts; the output is a single, unified low-poly mesh. If you wish to retain the model's parts, please use Low-Poly Retopology – V2.5",
 "继续生成": "Continue Generating",
 "低模拓扑 - V3.0 / V2.5 仅支持面数不超过200万的模型，请减面后重试": "Low-Poly Retopology – V3.0 / V2.5 only supports models with no more than 2 million faces. Please reduce faces and try again.",
 "低模拓扑 - V3.0 / V2.5 仅支持不超过150M的模型文件，请压缩后重试": "Low-Poly Retopology – V3.0 / V2.5 only supports model files up to 150MB. Please compress and try again.",
@@ -2053,6 +2054,10 @@ window.__HYRU_DICT = {
 [
 "「{{feature}}」已下线，该资产不支持重新生成",
 "\"{{feature}}\" has been retired, so this asset cannot be regenerated"
+],
+[
+"{{model}}暂不支持分Part拓扑，重拓扑后会输出一体化的低模Mesh。若希望模型保留Part请使用低模拓扑 - V2.5",
+"{{model}} does not support retopology that preserves individual parts; the output is a single, unified low-poly mesh. If you wish to retain the model's parts, please use Low-Poly Retopology – V2.5"
 ],
 [
 "可输入100至{{max}}的整数值，实际生成面数在目标值±20%范围内自适应调整。",
